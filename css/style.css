@@ -11,7 +11,7 @@ body {
 
 .main-visual {
     width: 100%;
-    background-image: url(../container/header_image.png);
+    background-image: url(../container/header_image.webp);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -412,7 +412,7 @@ footer ul li {
 /*--他ページ共通項目--*/
 
 .cover-lineup {
-    background-image: url(../container/header_image.png);
+    background-image: url(../container/header_image.webp);
 }
 
 .cover-about {
@@ -855,7 +855,7 @@ dd {
 
     .header-logo {
         justify-self: end; /*--右揃えに--*/
-        background-image: url(../container/header_image.png);
+        background-image: url(../container/header_image.webp);
         background-size: cover; /* 画像を全体にフィット */
         background-position: center; /* 中央寄せ */
         background-repeat: no-repeat; /* 繰り返しなし */
