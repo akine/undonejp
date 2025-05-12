@@ -439,10 +439,6 @@ footer ul li {
     grid-column: 1/ span 2; /*--1列目と2列目いっぱいに広げる--*/
 }
 
-.heading-medium {
-    
-}
-
 .center {
     text-align: center;
 }
