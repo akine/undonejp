@@ -532,7 +532,6 @@ footer ul li {
 }
 
 #id-about .residence {
-    display: grid;
     grid-template-columns: 45% 45%;
     justify-content: space-between;
     margin-top: 10%;
@@ -598,7 +597,6 @@ dd {
 --*/
 
 #id-about .about-info {
-    background-color: #f5f5f5;
     width: 90%;
     padding: 5%;
     margin-bottom: 10%;
