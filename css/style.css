@@ -11,10 +11,11 @@ body {
 
 .main-visual {
     width: 100%;
-    background-image: url(../container/bg_tophouseplant.webp);
+    background-image: url(../container/header_image.png);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    background-position-y: bottom;
 }
 
 /*--memo!cssグリッドでコピーも一緒に管理--*/
@@ -28,7 +29,7 @@ body {
 
 .navi {
     order: 2;
-    border: #222222;
+    border: #ffffff;
     justify-self: end; /*--右揃えに--*/
 }
 
@@ -39,22 +40,24 @@ body {
     list-style: none;
     width: 420px;
     height: 40px;
-    margin-top: 50px;
+    margin-top: 60px;
 }
 
 .navi ul li {
     display: inline-block;
-    width: 80px;
-    height: 28px;
+    width: 96px;
+    height: 24px;
     margin-top: 12px;
     padding: 0;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .navi a {
-    font-size: 16px;
+    font-size: 24px;
     text-decoration: none;
     text-align: center;
-    color: #222222;
+    color: #ffffff;
 }
 
 .hamburger {
@@ -71,6 +74,8 @@ header {
     margin-left: 5%;
     margin-top: 50px;
     order: 1;
+    height: 30%;
+    width: 30%;
 }
 
 /*--コピー--*/
@@ -78,11 +83,12 @@ header {
 .maincopy {
     text-align: center;
     font-size: 80px;
-    margin-top: 300px;
-    padding-bottom: 17%;
+    margin-top: 25%;
+    margin-bottom: 15%;
     order: 3;
     grid-column: 1/ span 2; /*--1列目と2列目いっぱいに広げる--*/
     grid-row: 2;
+    color: #ffffff;
 
     animation-name: fade_In_Anime; /*識別名*/
     animation-duration: 3s; /*1回分の長さ*/
@@ -144,20 +150,32 @@ main {
     margin-bottom: 64px;
 }
 
-.main-contents a {
-    margin: 10%;
+.main-contentsA {
+    width: 100%;
+    margin: auto;
+    margin-top: 22%;
 }
 
 .about {
-    background-color: #003f72;
-    width: 100vw;
-    padding: 1px 0 150px 0;
-    margin-left: calc(-50vw + 50%);
+    background-image: url('../container/footer_image.webp');
+    background-size: cover; /* 画像を全体にフィット */
+    background-position: center; /* 中央寄せ */
+    background-repeat: no-repeat; /* 繰り返しなし */
+    text-align: center;
+    margin: auto;
+    margin-top: 11%;
+    height: auto;
+    width: 100%;
+    padding: 150px 0 150px 0;
     margin-top: 20%;
 }
 
 .about h4 {
     color: white;
+    font-size: 48px;
+    margin: 0;
+    margin-bottom: 64px;
+    text-align: center;
 }
 
 .about p {
@@ -165,6 +183,8 @@ main {
     width: 60%;
     margin-left: calc(-30vw + 50%);
     text-align: left;
+    font-size: 16px;
+    line-height: 32px;
 }
 
 /*--content--*/
@@ -175,8 +195,8 @@ main {
     grid-template-rows: 1fr 1fr;
     width: 100%;
     height: 50vw;
-    gap: 15px;
-    margin-left: calc(-50vw + 50%);
+    gap: 10px;
+    margin: auto;
 }
 
 #vw-content {
@@ -189,6 +209,11 @@ main {
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: 2s;
+}
+
+#vw-content img:hover{
+  transform: scale(1.1);
 }
 
 /* 緑の帯＋文字部分 */
@@ -200,7 +225,7 @@ main {
     margin: auto;
     padding: 0.3em 0.5em;
     color: white;
-    background-color: #003f72;
+    background-color: #006effee;
     font-size: 0.8em;
     box-sizing: border-box;
     line-height: 1.2;
@@ -274,38 +299,56 @@ main {
     height: auto;
     margin: auto;
     display: grid;
-    grid-template-columns: repeat(3 ,1fr);
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 250px;
+    margin-bottom: 500px;
+    place-content: center;
+    place-items: center;
+    justify-items: center;
+    gap: 5%;
 }
 
 .service div {
     width: auto;
     height: auto;
-    display: block;
     margin: auto;
-    padding: 5%;
+    display: block;
+    padding: auto;
+}
+
+.service div img {
+    width: 100%;
+    max-width: 250px;
+    height: 100%;
+    margin: auto;
+}
+
+#serviceh4 {
+    padding-top: 15%;
+    font-size: 48px;
+    margin: 0;
+    text-align: center;
+}
+
+#serviceh5 {
+    text-align: center;
+    font-size: 20px;
+    margin: 0;
+    margin-bottom: 10%;
 }
 
 .service div h4 {
     text-align: center;
-    padding-top: 5%;
-}
-
-#service h4 {
     font-size: 24px;
-    margin: 0;
-    text-align: center;
-}
-
-#service h5 {
-    text-align: center;
-    font-size: 20px;
-    margin: 0;
 }
 
 /*--Footer--*/
 
 footer {
-    background-color: #222222;
+    background-image: url('../container/footer_image.webp');
+    background-size: cover; /* 画像を全体にフィット */
+    background-position: center; /* 中央寄せ */
+    background-repeat: no-repeat; /* 繰り返しなし */
     text-align: center;
     margin: auto;
     margin-top: 11%;
@@ -317,6 +360,11 @@ footer h2 {
     padding: 0;
     padding-top: 5%;
     margin: 0;
+}
+
+footer h2 img {
+    width: 10%;
+    height: 10%;
 }
 
 /*--footer-リンクボタン--*/
@@ -363,12 +411,12 @@ footer ul li {
 
 /*--他ページ共通項目--*/
 
-.cover-news {
-    background-image: url(../container/bg_news.webp);
+.cover-lineup {
+    background-image: url(../container/header_image.png);
 }
 
-.cover-lineup {
-    background-image: url(../container/lineup/bg_lineup.webp);
+.cover-about {
+    background-image: url(../container/footer_image.webp);
 }
 
 .page-cover {
@@ -384,9 +432,12 @@ footer ul li {
 }
 
 #click-text {
-    width: 240px;
+    width: 100%;
     height: 48px;
-    background-color: #007B47;
+    background-image: url(../container/footer_image.webp);
+    background-size: cover; /* 画像を全体にフィット */
+    background-position: center; /* 中央寄せ */
+    background-repeat: no-repeat; /* 繰り返しなし */
     font-size: 16px;
     font-weight: bold;
     border-radius: 16px;
@@ -400,7 +451,7 @@ footer ul li {
 }
 
 #click-text:hover {
-    background-color: #005632;
+    background-color: #dddddd;
 }
 
 /*--お問合せリンクボタン共通--*/
@@ -412,12 +463,12 @@ footer ul li {
 #click-text-info {
     width: 240px;
     height: 40px;
-    background-color: #007B47;
+    background-color: #ffffff;
     font-size: 16px;
     font-weight: bold;
     border-radius: 16px;
     text-align: center;
-    color: white;
+    color: rgb(0, 110, 255);
     margin: auto;
     padding-top: 20px;
     margin-left: 10px;
@@ -426,7 +477,7 @@ footer ul li {
 }
 
 #click-text-info:hover {
-    background-color: #005632;
+    background-color: #dbdbdb;
 }
 
 /*--テキスト共通--*/
@@ -440,53 +491,8 @@ footer ul li {
     grid-column: 1/ span 2; /*--1列目と2列目いっぱいに広げる--*/
 }
 
-.heading-medium {
-    
-}
-
 .center {
     text-align: center;
-}
-
-/*--news_main(id=news)--*/
-#news {
-    width: 80%;
-    height: 100%;
-    margin: auto;
-    margin-top: 10%;
-    margin-bottom: 20%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-#news article {
-    width: 66%;
-}
-
-#news article span {
-    font-size: 0.75rem;
-    background-color: #f5f5f5;
-    padding: 4px 8px;
-}
-
-#news article h2, #news article h3 {
-    line-height: 160%; /*--行間調整--*/
-}
-
-#news article img {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin: 24px 0;
-}
-
-/*--news_サイドバー--*/
-
-#news aside {
-    width: 28%;
-    border: 4px #f5f5f5 solid;
-    padding: 16px 0;
 }
 
 /*--lineup_grid--*/
@@ -499,22 +505,73 @@ footer ul li {
 
 #lineup .items {
     display: grid;
-    grid-template-columns: repeat(3 ,3fr);
+    grid-template-columns: repeat(2 ,2fr);
     margin-top: 5%;
+    gap: 15px;
 }
 
-#lineup .items div img {
-    height: 320px;
-    width: 320px;
+#vw-licontent {
+    position: relative;
+    overflow: hidden;
+}
+
+#vw-licontent img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    margin: auto;
-    margin-bottom: 10px;
-    margin-top: 40px;
+    transition: 2s;
 }
 
-#lineup .items div a {
-    font-size: 1rem;
+#vw-licontent img:hover{
+  transform: scale(1.1);
+}
+
+/* 緑の帯＋文字部分 */
+#vw-licontent h5,
+#vw-licontent p {
     text-align: center;
+    position: absolute;
+    width: 100%;
+    margin: auto;
+    padding: 0.3em 0.5em;
+    color: white;
+    background-color: #003f72;
+    font-size: 0.8em;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+
+/* h5はpの上に来る */
+#vw-licontent h5 {
+    bottom: 45px;
+}
+
+/* pは下 */
+#vw-licontent p {
+    bottom: 0;
+    height: 45px;
+    padding-top: 15px;
+}
+
+.content1 {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.content2 {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+.content3 {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+.content4 {
+    grid-row: 2;
+    grid-column: 2;
 }
 
 /*--id_about--*/
@@ -661,6 +718,7 @@ dd {
         padding: 0;
         opacity: 0;
         animation-name: none;
+        color: #ffffff;
     }
 
     .maincopy2 {
@@ -674,10 +732,11 @@ dd {
         grid-row: 1;
         order: 1;
         opacity: 1;
+        color: #ffffff;
     }
 
     .main-visual {
-        background-image: url(../container/mobile/mainvisual.webp);
+        background-image: url(../container/footer_image.webp);
         background-size: cover;
         background-position: 45% 50%;
         background-repeat: no-repeat;
@@ -685,12 +744,12 @@ dd {
     }
 
     .cover-news {
-        background-image: url(../container/bg_news.webp);
+        background-image: url(../container/footer_image.webp);
         background-position: 30% 50%;
     }
     
     .cover-lineup {
-        background-image: url(../container/lineup/bg_lineup.webp);
+        background-image: url(../container/footer_image.webp);
         background-position: 75% 60%;
     }
 
@@ -704,15 +763,22 @@ dd {
         right: 0;
         left: 0;
         top: 0;
-        z-index: 9998; /*レイヤー位置？なぜ9998?*/
         width: 100%;
         height: 100svh; /*高さいっぱいに表示　https://zenn.dev/tonkotsuboy_com/articles/svh-dvh-lvh-for-all-browser*/
         background-color: rgb(255, 255, 255, 0.6);
         backdrop-filter: blur(12px);
-        transition: ease .4s;
+        transition: 0.4s ease;
         display: flex;
         align-items: center;
         opacity: 0;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .navi.active {
+        opacity: 1;
+        z-index: 9998;
+        pointer-events: auto;
     }
 
     .navi ul {
@@ -759,7 +825,7 @@ dd {
     .hamburger span {
         width: 32px;
         height: 2px;
-        background-color: #222;
+        background-color: #ffffff;
         transition: ease .4s;
         display: block;
     }
@@ -789,11 +855,12 @@ dd {
 
     .header-logo {
         justify-self: end; /*--右揃えに--*/
-        background-image: url(../container/mobile/header_logo.svg);
-        width: 112px;
-        height: 24px;
-        background-repeat: no-repeat;
-        background-size: cover;
+        background-image: url(../container/header_image.png);
+        background-size: cover; /* 画像を全体にフィット */
+        background-position: center; /* 中央寄せ */
+        background-repeat: no-repeat; /* 繰り返しなし */
+        width: 200%;
+        height: 80%;
         margin: 0;
         padding: 0;
         order: 2;
@@ -817,7 +884,8 @@ dd {
     }
 
     .main-contents {
-        margin: 0;
+        width: 240px;
+        margin: auto;
         padding: 0;
     }
 
@@ -860,7 +928,6 @@ dd {
     #vw-content h5,
     #vw-content p {
         position: static;
-        background-color: #005632;
         color: white;
         width: 100%;
         margin: 0;
@@ -919,18 +986,17 @@ dd {
 
     #click-box {
         text-decoration: none;
+        width: 240px;
     }
 
     #click-text {
         width: 240px;
         height: 48px;
-        background-color: #007B47;
         font-size: 16px;
         font-weight: bold;
         border-radius: 16px;
         text-align: center;
-        color: white;
-        margin: auto;
+        margin: 0;
         margin-bottom: 64px;
         padding-top: 16px;
     }
@@ -944,12 +1010,10 @@ dd {
     #click-text-info {
         width: 240px;
         height: 40px;
-        background-color: #007B47;
         font-size: 16px;
         font-weight: bold;
         border-radius: 16px;
         text-align: center;
-        color: white;
         margin: auto;
         padding-top: 20px;
         margin-top: 10px;
@@ -958,57 +1022,44 @@ dd {
     /*lineup grid*/
 
     #lineup .items {
-        grid-template-columns: repeat(2 ,6fr);
-        margin-bottom: 40px;
-    }
-
-    #lineup .items div img {
-        height: 120px;
-        width: 120px;
         display: block;
+    }
+
+    #vw-licontent {
+        width: 100%;
+        margin-bottom: 20px;
+        position: static; /* ← 画像とかぶらない */
+    }
+
+    #vw-licontent img {
+        position: static; /* ← 画像も通常フロー */
+    }
+
+    #vw-licontent h5,
+    #vw-licontent p {
+        position: static; /* ← 絶対配置をやめる */
+        background-color: #003f72;
+        color: white;
+        width: 100%;
         margin: 0;
-        margin: auto;
-        margin-bottom: 10px;
-        margin-top: 40px;
+        padding: 0.5em;
+        box-sizing: border-box;
     }
 
-    /*news*/
-    #news {
-        height: 100%;
-        display: grid;
-        grid-template-columns: repeat(1,2fr);
-        line-height: 2rem;
-    }
-    
-    #news article {
-        width: 100%;
+    #vw-licontent h5 {
+        font-size: 1em;
     }
 
-    #news article h3 {
-        margin-top: 80px;
+    #vw-licontent p {
+        font-size: 0.9em;
     }
 
-    #news aside {
-        border: 4px #f5f5f5 solid;
-        border-width: 4px 0px 4px 0px;
-        width: 100%;
-    }
-
-    #news aside ul {
-        padding: 0;
-    }
-
-    #news aside ul li {
-        list-style: none;
-        text-align: center;
-        padding: 10px 0px 10px 0px;
-        margin: 5px 0px 5px 0px;
-        background-color: #f5f5f5;
-    }
-
-    #news aside ul li a {
-        text-decoration: none;
-        color: #222222;
+    .content1,
+    .content2,
+    .content3,
+    .content4 {
+        grid-row: auto;
+        grid-column: auto;
     }
 
     /*About*/
