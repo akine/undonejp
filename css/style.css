@@ -82,6 +82,7 @@ header {
     padding-bottom: 17%;
     order: 3;
     grid-column: 1/ span 2; /*--1列目と2列目いっぱいに広げる--*/
+    grid-row: 2;
 
     animation-name: fade_In_Anime; /*識別名*/
     animation-duration: 3s; /*1回分の長さ*/
@@ -89,11 +90,20 @@ header {
     opacity: 0; /*透明度*/
 }
 
+.maincopy2 {
+    opacity: 0;
+    grid-row: 2;
+    grid-column: 2;
+
+}
+
 @keyframes fade_In_Anime {
     0% {
+        padding-top: 120px;
         opacity: 0;
     }
     100%{
+        padding-top: 0;
         opacity: 1;
     }
 }
@@ -102,7 +112,7 @@ header {
 /*--メインコンテンツ--*/
 
 main {
-    width: 40%;
+    width: 65%;
     height: auto;
     margin: auto;
 }
@@ -120,8 +130,9 @@ main {
 }
 
 .main-contents h4 {
-    font-size: 24px;
+    font-size: 48px;
     margin: 0;
+    margin-top: 250px;
     margin-bottom: 64px;
 }
 
@@ -133,51 +144,161 @@ main {
     margin-bottom: 64px;
 }
 
-/*--slideShow--*/
-
-.slide .photo {
-    padding: 16px;
+.main-contents a {
+    margin: 10%;
 }
-.slide .photo img {
-    object-fit: cover;
+
+.about {
+    background-color: #003f72;
+    width: 100vw;
+    padding: 1px 0 150px 0;
+    margin-left: calc(-50vw + 50%);
+    margin-top: 20%;
+}
+
+.about h4 {
+    color: white;
+}
+
+.about p {
+    color: white;
+    width: 60%;
+    margin-left: calc(-30vw + 50%);
+    text-align: left;
+}
+
+/*--content--*/
+
+.content {
+    display: grid;
+    grid-template-columns: 50% 25% 25%;
+    grid-template-rows: 1fr 1fr;
     width: 100%;
+    height: 50vw;
+    gap: 5px;
 }
 
-.prev-arrow, .next-arrow {
+#vw-content {
+    position: relative;
+    overflow: hidden;
+}
+
+#vw-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    width: 40px;
-    height: 40px;
-    background-color: #007B47;
-    border-radius: 50%;
-    transition: .3s;
-    cursor: pointer;
+}
+
+/* 緑の帯＋文字部分 */
+#vw-content h5,
+#vw-content p {
+    text-align: center;
     position: absolute;
-    top: 44%;
-    z-index: 1;
-}
-
-.prev-arrow {
-    transform: rotate(180deg);
-    left: -10px;
-}
-
-.next-arrow {
-    right: -10px;
-}
-
-.prev-arrow::before, .next-arrow::before {
-    position: absolute;
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-right: 2px solid #FFF;
-    border-top: 2px solid #FFF;
-    top: 0;
-    bottom: 0;
-    left: -4px;
-    right: 0;
+    width: 100%;
     margin: auto;
-    transform: rotate(45deg);
+    padding: 0.3em 0.5em;
+    color: white;
+    background-color: #003f72;
+    font-size: 0.8em;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+
+/* h5はpの上に来る */
+#vw-content h5 {
+    bottom: 45px;
+}
+
+/* pは下 */
+#vw-content p {
+    bottom: 0;
+    height: 45px;
+    padding-top: 15px;
+}
+
+/* グリッド位置設定（そのまま） */
+.photo1 {
+    grid-row: 1 / 3;
+    grid-column: 1;
+}
+
+.photo2 {
+    grid-row: 1;
+    grid-column: 2 / 4;
+}
+
+.photo3 {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+.photo4 {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+/* グリッド位置設定 */
+.photo1 {
+    grid-row: 1 / 3;
+    grid-column: 1;
+}
+
+.photo2 {
+    grid-row: 1;
+    grid-column: 2 / 4;
+}
+
+.photo3 {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+.photo4 {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+/*--service--*/
+
+#service {
+    width: 80%;
+    height: auto;
+    margin: auto;
+    margin-top: 10%;
+}
+
+.service {
+    width: 80%;
+    height: auto;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3 ,1fr);
+}
+
+.service div {
+    width: auto;
+    height: auto;
+    display: block;
+    margin: auto;
+    padding: 5%;
+}
+
+.service div h4 {
+    text-align: center;
+    padding-top: 5%;
+}
+
+#service h4 {
+    font-size: 24px;
+    margin: 0;
+    text-align: center;
+}
+
+#service h5 {
+    text-align: center;
+    font-size: 20px;
+    margin: 0;
 }
 
 /*--Footer--*/
@@ -187,7 +308,7 @@ footer {
     text-align: center;
     margin: auto;
     margin-top: 11%;
-    height: 600px;
+    height: 500px;
 }
 
 footer h2 {
@@ -371,7 +492,7 @@ footer ul li {
 
 #lineup {
     width: 80%;
-    height: 180%;
+    height: auto;
     text-align: center;
 }
 
@@ -400,7 +521,7 @@ footer ul li {
 #id-about {
     width: 80%; /*メインコンテンツの横幅を指定*/
     margin: auto;
-    height: 1500px; /*メインコンテンツの縦幅を指定*/
+    height: auto; /*メインコンテンツの縦幅を指定*/
 }
 
 #id-about h3 {
@@ -412,10 +533,12 @@ footer ul li {
 }
 
 #id-about .residence {
-    display: flex;
+    display: grid;
+    grid-template-columns: 45% 45%;
     justify-content: space-between;
     margin-top: 10%;
     margin-bottom: 10%;
+    gap: 5%;
 }
 
 #id-about .residence--- {
@@ -427,10 +550,10 @@ footer ul li {
     border-color: #f5f5f5;
 }
 
-/*--店舗情報,about-dl--*/
+/*--会社情報,about-dl--*/
 
 #id-about .residence div dl div {
-    height: 1em;
+    height: 2em;
     padding-top: 1em;
     padding-bottom: 1em;
     border-bottom: solid;
@@ -448,6 +571,13 @@ footer ul li {
     float: left;
     margin-left: 1em;
 }
+
+#about-smdd {
+    float: left;
+    margin-left: 1em;
+    font-size: 0.5em;
+}
+
 
 
 /*--調べたコード https://ferret-plus.com/5063?page=2
@@ -471,8 +601,7 @@ dd {
 #id-about .about-info {
     background-color: #f5f5f5;
     width: 90%;
-    margin: auto;
-    padding: 5% 10% 1% 10%;
+    padding: 5%;
     margin-bottom: 10%;
 }
 
@@ -480,10 +609,6 @@ dd {
     text-align: center;
     margin: none;
     margin: auto; /*id-about内でのh3を再定義*/
-}
-
-#id-about .about-info p {
-
 }
 
 /*埋め込み*/
@@ -518,26 +643,39 @@ dd {
 
     .header {
         display: grid;
-        grid-template-columns: repeat(2,1fr);
+        grid-template-columns: 80% 20%;
+        grid-template-rows: 50% 50%;
         width: 80%;
         padding: 0;
         margin: 0;
         margin: auto;
         padding-left: 2.5%;
         padding-top: 15%;
+        height: auto;
     }
 
     /*--メインコピー--*/
     
     .maincopy {
+        width: 0;
+        height: 0;
         margin: 0;
         padding: 0;
-        font-size: 2.5rem;
+        opacity: 0;
+        animation-name: none;
+    }
+
+    .maincopy2 {
+        margin: 0;
+        padding: 0;
+        font-size: 2rem;
         text-align: left;
         line-height: 130%;
-        width: 120px;
+        width: 300px;
         grid-column: 1;
+        grid-row: 1;
         order: 1;
+        opacity: 1;
     }
 
     .main-visual {
@@ -616,6 +754,8 @@ dd {
         z-index: 9999;
         order: 3;
         display: block;
+        grid-column: 2;
+        grid-row: 2;
     }
 
     .hamburger span {
@@ -673,9 +813,9 @@ dd {
 
     main {
         width: 90%;
-        height: 850px;
-        margin: 0;
+        height: auto;
         margin: auto;
+        margin-top: 10%;
     }
 
     .main-contents {
@@ -690,10 +830,63 @@ dd {
     .main-contents h3 {
         font-size: 2rem;
     }
+    .main-contents h4 {
+    font-size: 24px;
+    margin: 0;
+    margin-top: 80%;
+    margin-bottom: 64px;
+    }
+
+
+    .content {
+        display: block;
+        height: auto;
+        width: 80%;
+        margin: auto;
+    }
+
+    #vw-content {
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin-bottom: 1em;
+    }
+
+    #vw-content img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        display: block;
+    }
+
+    #vw-content h5,
+    #vw-content p {
+        position: static;
+        background-color: #005632;
+        color: white;
+        width: 100%;
+        margin: 0;
+        padding: 0.5em;
+        box-sizing: border-box;
+    }
+
+    .service {
+        display: block;
+        width: 90%;
+        margin: auto;
+    }
+
+    .service div {
+        width: 100%;
+        padding: 5% 0;
+    }
+
+
 
     /*--footer--*/
 
     footer {
+        height: 300px;
         margin: 0;
         padding: 0;
         padding-top: 120px;
@@ -823,11 +1016,13 @@ dd {
     /*About*/
     #id-about {
         height: 100%;
+        width: 80%;
     }
 
     #id-about .residence {
         display: grid;
         grid-template-columns: repeat(1, 2fr);
+        width: 100%;
     }
 
     #id-about .residence div {
@@ -842,6 +1037,12 @@ dd {
     /*店舗情報*/
     #id-about .residence div dl div dd {
         margin-left: 0;
+        font-size: 0.8em;
+    }
+
+    #id-about .residence div dl div dt {
+        margin-left: 0;
+        font-size: 0.8em;
     }
 
     /*google map*/
@@ -854,7 +1055,7 @@ dd {
         width: 100%;
         margin: 0;
         padding: 0;
-        padding: 120px 0px 80px 0px;
+        padding: 40px 0px 0px 0px;
         margin: 40px 0px 40px 0px;
     }
 
@@ -863,6 +1064,7 @@ dd {
         margin: auto;
         margin-top: 40px;
         margin-bottom: 40px;
+        font-size: 0.8em;
     }
 
     /*SNS埋め込み　横幅指定がうまくいかない。*/
