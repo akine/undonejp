@@ -352,7 +352,7 @@ footer {
     text-align: center;
     margin: auto;
     margin-top: 11%;
-    height: 500px;
+    padding-bottom: 11%;
 }
 
 footer h2 {
@@ -884,7 +884,7 @@ dd {
     }
 
     .main-contents {
-        width: 240px;
+        width: 100%;
         margin: auto;
         padding: 0;
     }
@@ -935,15 +935,23 @@ dd {
         box-sizing: border-box;
     }
 
+    .about {
+        width: 100%;
+    }
+
     .service {
         display: block;
-        width: 90%;
+        width: 80%;
         margin: auto;
     }
 
     .service div {
+        width: 80%;
+        padding: 0 0;
+    }
+
+    .main-contentsA {
         width: 100%;
-        padding: 5% 0;
     }
 
 
@@ -997,6 +1005,7 @@ dd {
         border-radius: 16px;
         text-align: center;
         margin: 0;
+        margin: auto;
         margin-bottom: 64px;
         padding-top: 16px;
     }
