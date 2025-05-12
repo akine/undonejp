@@ -1,25 +1,101 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Undone – Coming Soon</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: system-ui, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
-      h1 {
-        font-size: clamp(2rem, 5vw, 4rem);
-        font-weight: 700;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Undone – Coming&nbsp;Soon</h1>
-  </body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Green, Stylish, You</title>
+        <meta name="description" cintent="生活に緑の潤いとスタイルをもたらすことをコンセプトに、厳選された植物とオリジナルのデザインアイテムを提供しているプラントショップです。">
+        <!--ファビコン-->
+        <link rel="icon" href="favicon.ico" size="32x32">
+        <link rel="icon" href="icon.svg" type="container/svg+xml">
+        <!--OGP-->
+        <meta property="og:title" content="N Plant Studio">
+        <meta property="og:title" content="website">
+        <meta property="og:url" content="https://n-plant.studio/">
+        <meta property="og:image" content="container/ogp.png">
+        <meta property="og:discription" content="生活に緑のうるおいとスタイルをもたらすことをコンセプトに、厳選された植物とオリジナルのデザインアイテムを提供しているプラントショップです。">
+        <meta property="og:site_name" content="N Plant Studio">
+        <meta property="og:locale" content="ja_JP">
+        <!--CSS-->
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+        <!--slick-->
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    </head>
+    <body>
+        <header class="main-visual">
+            <div class="header">
+                <h1 class="header-logo"><a href="index.html"><img src="container/logoheaderlogo.svg" alt="Plant Studioのロゴ"></a></h1>
+                <nav class="navi" id="js-navi"><ul>
+                    <li><a href="lineup.html">Line up</a></li>
+                    <li><a href="News.html">News</a></li>
+                    <li><a href="About.html">About</a></li>
+                </ul></nav>
+                <button class="hamburger" id="js-hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <h2 class="maincopy">Green, Stylish, You</h2>
+            </div>
+        </header>
+        <main>
+            <section class="main-contents">
+                <h3>Concept</h3>
+                <h4>緑とスタイルで表現するあなたらしさ</h4>
+                <p>「N Plant Studio」は、都市の喧騒を忘れさせるような、生活に緑の潤いとスタイルをもたらすことをコンセプトに、厳選された植物とオリジナルのデザインアイテムを提供しています。私たちの店は、あなたの生活空間を心地よく豊かにするための小さな楽園です。植物の自然な美しさを身近に感じることで、日々の疲れを和らげ、心に穏やかな時間をもたらします。</p>
+                <div class="slide">
+                    <div>
+                        <div class="photo">
+                            <img src="container/lineup/item01.webp" alt="カジュマル">
+                        </div>
+                        <div class="photo">
+                            <img src="container/lineup/item02.webp" alt="フィドルイチジク">
+                        </div>
+                        <div class="photo">
+                            <img src="container/lineup/item03.webp" alt="グリーンサボテン">
+                        </div>
+                        <div class="photo">
+                            <img src="container/lineup/item04.webp" alt="モンテスラ">
+                        </div>
+                    </div>
+                </div>
+                <a href="catalog.html" id="click-box"><p id="click-text">主な取り扱い植物をみる</p></a>
+            </section>
+        </main>
+        <footer>
+            <h2><img src="container/logosfooterlogo.svg"></h2>
+            <ul>
+                <li><a href="contact.html" id="click-box-info"><p id="click-text-info">メールでお問合せ</p></a></li>
+                <li><a href="catalog.html" id="click-box-info"><p id="click-text-info">オンラインショップ</p></a></li>
+            </ul>
+            <div class="info">
+            <ul>
+                <li><p>〒150-0031 東京都渋谷区桜丘町4-16</p></li>
+                <li><p>営業時間：火・金・土・日・祝日</p></li>
+                <li><p>11:00〜17:00</p></li>
+            </ul>
+            </div>
+            <div class="copy">
+            <small>&copy; 2024 N Plant Studio</small>
+            </div>
+        </footer>
+    <!--jQuery-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!--slick-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <!--jQuery自作ファイル-->
+    <script src="js/script.js"></script>
+    </body>
 </html>
+
+
+
+<!--0529未定    Aboutページの埋め込み要素。横幅1920px以上は問題ないが、それ未満になるとはみ出る問題。埋め込みタグを入れているdiv要素にiframeは入れているが、なぜかはみ出る。class指定して再度確認。-->
+<!--↑未解決-->
+<!--0529未定    （レスポンシブcss各ページ共通）CSSgridでheader要素を入れ替えている。(orderで指定してます。)デスクトップ時は大丈夫だが、レスポンシブ時はheaderLOGOをタップで親ページに戻れない問題。a要素が0x0なのが原因？-->
+<!--↑解決-->
