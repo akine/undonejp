@@ -948,7 +948,7 @@ dd {
         text-align: center;
         margin: auto;
         margin-top: 11%;
-        height: 50vh;
+        height: 100vh;
         width: 100%;
         padding: 150px 0 150px 0;
         margin-top: 20%;
@@ -962,11 +962,14 @@ dd {
     .about-cap h4 {
         background-color: rgba(255, 255, 255, 0);
         color: white;
+        font-size: 20px;
     }
 
     .about-cap p {
         background-color: rgba(255, 255, 255, 0);
         color: white;
+        font-size: 12px;
+        line-height: 24px;
     }
 
     .service {
