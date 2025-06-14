@@ -1,0 +1,20 @@
+{
+  "name": "undonejp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "eslint": "*",
+    "@eslint/js": "*",
+    "vite": "*"
+  }
+}
+
