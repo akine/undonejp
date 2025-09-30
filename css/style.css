@@ -324,6 +324,7 @@ main {
     height: auto;
     margin: auto;
     display: grid;
+    align-items: center;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 250px;
     margin-bottom: 500px;
@@ -342,10 +343,11 @@ main {
 }
 
 .service div img {
+    align-items: center;
     width: 100%;
-    max-width: 250px;
+    max-width: 50%;
     height: 100%;
-    margin: auto;
+    margin: 0% 25% 0% 25%;
 }
 
 #serviceh4 {
@@ -981,6 +983,7 @@ dd {
     .service div {
         width: 80%;
         padding: 0 0;
+        margin: 50% 25% 0% 25%;
     }
 
     .main-contentsA {
