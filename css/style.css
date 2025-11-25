@@ -7,6 +7,12 @@ body {
     width: 100%;
     min-width: 1440px;
     padding: 0;
+    font-family: 'Quicksand', "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    color: #333;
+}
+
+h1, h2, h3, h4, .navi a {
+    font-family: 'Krona One', sans-serif;
 }
 
 .main-visual {
@@ -60,6 +66,18 @@ body {
     color: #ffffff;
 }
 
+.btn-contact {
+    background-color: #0056b3;
+    color: #fff !important;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: background-color 0.3s;
+}
+
+.btn-contact:hover {
+    background-color: #003d82;
+}
+
 .hamburger {
     display: none;
 }
@@ -101,6 +119,24 @@ header {
     grid-row: 2;
     grid-column: 2;
 
+}
+
+.hero-cta {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: start;
+}
+
+.hero-cta a {
+    display: inline-block;
+    background: #fff;
+    color: #000;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 50px;
+    margin-top: 20px;
+    font-family: 'Krona One', sans-serif;
 }
 
 @keyframes fade_In_Anime {
@@ -740,6 +776,12 @@ dd {
         order: 1;
         opacity: 1;
         color: #ffffff;
+    }
+
+    .hero-cta {
+        grid-column: 1;
+        grid-row: 2;
+        margin-top: 20px;
     }
 
     .main-visual {
