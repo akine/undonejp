@@ -1,23 +1,32 @@
-$("#js-hamburger").click(function() {
-    $("#js-navi").toggleClass("active");
-    $("#js-hamburger").toggleClass("active");
-    $("#js-navi-a").toggleClass("active-a");
-});
+$(function () {
+    const $nav = $('#js-navi');
+    const $hamburger = $('#js-hamburger');
 
-/*slick*/
-$(document).ready(function() {
-    $('.slide').slick({
-        slideToShow: 3,
-        slideToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        prevArrow: '<div class="slide-arrow prev-arrow"></div>',
-        nextArrow: '<div class="slide-arrow next-arrow"></div>',
-        responsive: [{
-            breakepoint: 800,
-            settings: {
-                slideToShow: 1,
-            }
-        }]
+    $hamburger.on('click', function () {
+        $nav.toggleClass('open');
+    });
+
+    $nav.find('a').on('click', function () {
+        $nav.removeClass('open');
+    });
+
+    $('a[href^="#"]').on('click', function (e) {
+        const targetId = $(this).attr('href');
+        const $target = $(targetId);
+        if ($target.length) {
+            e.preventDefault();
+            $('html, body').animate({ scrollTop: $target.offset().top - 60 }, 600, 'swing');
+        }
     });
 });
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.fade').forEach((el) => observer.observe(el));
