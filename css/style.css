@@ -81,6 +81,10 @@ img {
     transition: all 0.2s ease;
     color: var(--muted);
     font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 .nav-links a:hover {
@@ -127,6 +131,18 @@ img {
     color: #fff;
     background: transparent;
     padding: 10px 16px;
+}
+
+.nav-cta {
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    color: #fff !important;
+    border-color: transparent;
+    box-shadow: 0 12px 30px rgba(10, 107, 255, 0.35);
+}
+
+.nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 36px rgba(10, 107, 255, 0.45);
 }
 
 .hamburger {
@@ -534,6 +550,10 @@ main {
 
     .nav-links a {
         font-size: 18px;
+        width: min(320px, 82vw);
+        white-space: normal;
+        text-align: center;
+        padding: 12px 18px;
     }
 
     .sp-only {
