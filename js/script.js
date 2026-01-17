@@ -84,16 +84,41 @@ const renderProductions = () => {
         return '';
     };
 
+    const resolveRoleGroup = (role) => {
+        if (!role) {
+            return 'その他';
+        }
+        if (role.includes('監督')) {
+            return '監督・編集';
+        }
+        if (role.includes('編集')) {
+            return '編集';
+        }
+        if (role.includes('制作')) {
+            return '制作';
+        }
+        return 'その他';
+    };
+
     const createCard = (item) => {
         const article = document.createElement('article');
         article.className = 'card fade';
 
         const media = document.createElement('div');
         media.className = 'card-media';
-        const img = document.createElement('img');
-        img.src = resolveThumbnail(item);
-        img.alt = item.alt || item.title || '制作実績';
-        media.appendChild(img);
+        const resolvedThumbnail = resolveThumbnail(item);
+        if (resolvedThumbnail) {
+            const img = document.createElement('img');
+            img.src = resolvedThumbnail;
+            img.alt = item.alt || item.title || '制作実績';
+            media.appendChild(img);
+        } else {
+            media.classList.add('card-media-empty');
+            const placeholder = document.createElement('div');
+            placeholder.className = 'media-placeholder';
+            placeholder.textContent = item.platform || 'Production';
+            media.appendChild(placeholder);
+        }
 
         const body = document.createElement('div');
         body.className = 'card-body';
@@ -128,7 +153,73 @@ const renderProductions = () => {
 
         article.appendChild(media);
         article.appendChild(body);
+        article.dataset.platform = item.platform || 'その他';
+        article.dataset.role = resolveRoleGroup(item.role || '');
         return article;
+    };
+
+    const buildFilters = (items) => {
+        const filterWrap = document.getElementById('works-filters');
+        if (!filterWrap) {
+            return;
+        }
+        const platforms = ['すべて', ...new Set(items.map((item) => item.platform).filter(Boolean))];
+        const roles = ['すべて', ...new Set(items.map((item) => resolveRoleGroup(item.role || '')))];
+
+        const createGroup = (label, groupKey, options) => {
+            const group = document.createElement('div');
+            group.className = 'filter-group';
+            const title = document.createElement('span');
+            title.className = 'filter-label';
+            title.textContent = label;
+            group.appendChild(title);
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'filter-button';
+                if (index === 0) {
+                    button.classList.add('active');
+                }
+                button.dataset.filterGroup = groupKey;
+                button.dataset.filterValue = option;
+                button.textContent = option;
+                group.appendChild(button);
+            });
+            filterWrap.appendChild(group);
+        };
+
+        filterWrap.innerHTML = '';
+        createGroup('プラットフォーム', 'platform', platforms);
+        createGroup('担当', 'role', roles);
+    };
+
+    const applyFilters = () => {
+        const filterWrap = document.getElementById('works-filters');
+        if (!filterWrap) {
+            return;
+        }
+        const activeButtons = filterWrap.querySelectorAll('.filter-button.active');
+        const filters = Array.from(activeButtons).reduce((acc, button) => {
+            acc[button.dataset.filterGroup] = button.dataset.filterValue;
+            return acc;
+        }, {});
+
+        const cards = container.querySelectorAll('.card');
+        let visibleCount = 0;
+        cards.forEach((card) => {
+            const platformMatch = !filters.platform || filters.platform === 'すべて' || card.dataset.platform === filters.platform;
+            const roleMatch = !filters.role || filters.role === 'すべて' || card.dataset.role === filters.role;
+            const isVisible = platformMatch && roleMatch;
+            card.style.display = isVisible ? '' : 'none';
+            if (isVisible) {
+                visibleCount += 1;
+            }
+        });
+
+        const countLabel = document.getElementById('works-count');
+        if (countLabel) {
+            countLabel.textContent = `表示中: ${visibleCount}件`;
+        }
     };
 
     fetch(dataSource)
@@ -146,12 +237,30 @@ const renderProductions = () => {
             }
 
             container.innerHTML = '';
+            buildFilters(items);
             items.forEach((item) => {
                 container.appendChild(createCard(item));
             });
 
             // 追加したカードもスクロールで表示アニメーションを適用
             container.querySelectorAll('.fade').forEach((el) => observer.observe(el));
+
+            const filterWrap = document.getElementById('works-filters');
+            if (filterWrap) {
+                filterWrap.addEventListener('click', (event) => {
+                    const button = event.target.closest('.filter-button');
+                    if (!button) {
+                        return;
+                    }
+                    const group = button.dataset.filterGroup;
+                    filterWrap.querySelectorAll(`.filter-button[data-filter-group="${group}"]`).forEach((btn) => {
+                        btn.classList.remove('active');
+                    });
+                    button.classList.add('active');
+                    applyFilters();
+                });
+            }
+            applyFilters();
         })
         .catch(() => {
             container.innerHTML = '<p class="section-copy">制作実績の読み込みに失敗しました。時間をおいて再度お試しください。</p>';
