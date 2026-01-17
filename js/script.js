@@ -31,6 +31,8 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.fade').forEach((el) => observer.observe(el));
 
+const tiktokThumbCache = new Map();
+
 const formatDuration = (iso) => {
     if (!iso) {
         return null;
@@ -117,6 +119,36 @@ const fetchYouTubeStats = async (ids) => {
     } catch (error) {
         return {};
     }
+};
+
+const fetchTikTokThumbs = async (urls) => {
+    const unique = Array.from(new Set(urls.filter(Boolean)));
+    const pending = unique.filter((url) => !tiktokThumbCache.has(url));
+    if (pending.length) {
+        try {
+            const params = new URLSearchParams();
+            pending.forEach((url) => params.append('urls', url));
+            const response = await fetch(`/api/tiktok?${params.toString()}`);
+            if (response.ok) {
+                const data = await response.json();
+                const items = data.items || {};
+                Object.keys(items).forEach((key) => {
+                    if (items[key]) {
+                        tiktokThumbCache.set(key, items[key]);
+                    }
+                });
+            }
+        } catch (error) {
+            // 取得失敗時は後続の処理に影響させない
+        }
+    }
+    const result = {};
+    unique.forEach((url) => {
+        if (tiktokThumbCache.has(url)) {
+            result[url] = tiktokThumbCache.get(url);
+        }
+    });
+    return result;
 };
 
 const resolveThumbnail = (item) => {
@@ -224,9 +256,15 @@ const createCard = (item) => {
     return article;
 };
 
-const buildEnrichedItems = (items, stats) => items.map((item) => {
+const buildEnrichedItems = (items, stats, tiktokThumbs = {}) => items.map((item) => {
     const id = getYouTubeId(item.url);
     if (!id || !stats[id]) {
+        if (item.platform === 'TikTok' && tiktokThumbs[item.url]) {
+            return {
+                ...item,
+                thumbnail: item.thumbnail || tiktokThumbs[item.url]
+            };
+        }
         return item;
     }
     const duration = item.duration || formatDuration(stats[id].duration);
@@ -236,7 +274,8 @@ const buildEnrichedItems = (items, stats) => items.map((item) => {
         ...item,
         duration: duration || item.duration,
         result: result || item.result,
-        viewCount: Number.isFinite(viewCount) ? viewCount : item.viewCount
+        viewCount: Number.isFinite(viewCount) ? viewCount : item.viewCount,
+        thumbnail: item.thumbnail || tiktokThumbs[item.url]
     };
 });
 
@@ -352,7 +391,11 @@ const renderProductions = async () => {
         const ids = items.map((item) => getYouTubeId(item.url)).filter(Boolean);
         const uniqueIds = Array.from(new Set(ids));
         const stats = await fetchYouTubeStats(uniqueIds);
-        const enrichedItems = buildEnrichedItems(items, stats);
+        const tiktokUrls = items
+            .filter((item) => item.platform === 'TikTok' && !item.thumbnail && item.url)
+            .map((item) => item.url);
+        const tiktokThumbs = await fetchTikTokThumbs(tiktokUrls);
+        const enrichedItems = buildEnrichedItems(items, stats, tiktokThumbs);
 
         container.innerHTML = '';
         buildFilters(enrichedItems);
@@ -416,7 +459,11 @@ const renderHomeWorksMobile = async () => {
             const ids = items.map((item) => getYouTubeId(item.url)).filter(Boolean);
             const uniqueIds = Array.from(new Set(ids));
             const stats = await fetchYouTubeStats(uniqueIds);
-            const enrichedItems = buildEnrichedItems(items, stats);
+            const tiktokUrls = items
+                .filter((item) => item.platform === 'TikTok' && !item.thumbnail && item.url)
+                .map((item) => item.url);
+            const tiktokThumbs = await fetchTikTokThumbs(tiktokUrls);
+            const enrichedItems = buildEnrichedItems(items, stats, tiktokThumbs);
 
             const millionHits = enrichedItems.filter((item) => Number(item.viewCount) >= 1000000);
             const sourceItems = millionHits.length ? millionHits : enrichedItems;
