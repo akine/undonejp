@@ -31,7 +31,7 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.fade').forEach((el) => observer.observe(el));
 
-const renderProductions = () => {
+const renderProductions = async () => {
     const container = document.getElementById('works-grid');
     if (!container) {
         return;
@@ -44,6 +44,47 @@ const renderProductions = () => {
     }
 
     // 日本語の読みやすさを保つため、DOMを組み立てて安全に反映する
+    const formatDuration = (iso) => {
+        if (!iso) {
+            return null;
+        }
+        const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+        if (!match) {
+            return null;
+        }
+        const hours = Number(match[1] || 0);
+        const minutes = Number(match[2] || 0);
+        const seconds = Number(match[3] || 0);
+        const parts = [];
+        if (hours) {
+            parts.push(`${hours}時間`);
+        }
+        if (minutes) {
+            parts.push(`${minutes}分`);
+        }
+        if (seconds) {
+            parts.push(`${seconds}秒`);
+        }
+        return parts.length ? parts.join('') : null;
+    };
+
+    const formatViewCount = (value) => {
+        const count = Number(value);
+        if (!Number.isFinite(count)) {
+            return null;
+        }
+        const formatNumber = (num) => {
+            const rounded = Math.round(num * 10) / 10;
+            return Number.isInteger(rounded) ? rounded.toString() : rounded.toFixed(1);
+        };
+        if (count >= 100000000) {
+            return `再生数${formatNumber(count / 100000000)}億`;
+        }
+        if (count >= 10000) {
+            return `再生数${formatNumber(count / 10000)}万`;
+        }
+        return `再生数${count.toLocaleString('ja-JP')}`;
+    };
     const getYouTubeId = (url) => {
         if (!url) {
             return null;
@@ -71,6 +112,23 @@ const renderProductions = () => {
         }
 
         return null;
+    };
+
+    const fetchYouTubeStats = async (ids) => {
+        if (!ids.length) {
+            return {};
+        }
+        try {
+            const query = new URLSearchParams({ ids: ids.join(',') });
+            const response = await fetch(`/api/youtube?${query.toString()}`);
+            if (!response.ok) {
+                return {};
+            }
+            const data = await response.json();
+            return data.items || {};
+        } catch (error) {
+            return {};
+        }
     };
 
     const resolveThumbnail = (item) => {
@@ -140,6 +198,25 @@ const renderProductions = () => {
         body.appendChild(title);
         if (item.role) {
             body.appendChild(meta);
+        }
+
+        const metrics = [];
+        if (item.purpose) {
+            metrics.push(`目的: ${item.purpose}`);
+        } else if (item.type) {
+            metrics.push(`種別: ${item.type}`);
+        }
+        if (item.duration) {
+            metrics.push(`尺: ${item.duration}`);
+        }
+        if (item.result) {
+            metrics.push(`成果: ${item.result}`);
+        }
+        if (metrics.length) {
+            const detail = document.createElement('p');
+            detail.className = 'meta meta-detail';
+            detail.textContent = metrics.join(' / ');
+            body.appendChild(detail);
         }
 
         if (item.url) {
@@ -233,49 +310,63 @@ const renderProductions = () => {
         }
     };
 
-    fetch(dataSource)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Failed to load productions data');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            const items = Array.isArray(data) ? data : data.items;
-            if (!Array.isArray(items) || items.length === 0) {
-                container.innerHTML = '<p class="section-copy">現在公開できる制作実績は準備中です。</p>';
-                return;
-            }
+    try {
+        const response = await fetch(dataSource);
+        if (!response.ok) {
+            throw new Error('Failed to load productions data');
+        }
+        const data = await response.json();
+        const items = Array.isArray(data) ? data : data.items;
+        if (!Array.isArray(items) || items.length === 0) {
+            container.innerHTML = '<p class="section-copy">現在公開できる制作実績は準備中です。</p>';
+            return;
+        }
 
-            container.innerHTML = '';
-            buildFilters(items);
-            items.forEach((item) => {
-                container.appendChild(createCard(item));
-            });
-
-            // 追加したカードもスクロールで表示アニメーションを適用
-            container.querySelectorAll('.fade').forEach((el) => observer.observe(el));
-
-            const filterWrap = document.getElementById('works-filters');
-            if (filterWrap) {
-                filterWrap.addEventListener('click', (event) => {
-                    const button = event.target.closest('.filter-button');
-                    if (!button) {
-                        return;
-                    }
-                    const group = button.dataset.filterGroup;
-                    filterWrap.querySelectorAll(`.filter-button[data-filter-group="${group}"]`).forEach((btn) => {
-                        btn.classList.remove('active');
-                    });
-                    button.classList.add('active');
-                    applyFilters();
-                });
+        const ids = items.map((item) => getYouTubeId(item.url)).filter(Boolean);
+        const uniqueIds = Array.from(new Set(ids));
+        const stats = await fetchYouTubeStats(uniqueIds);
+        const enrichedItems = items.map((item) => {
+            const id = getYouTubeId(item.url);
+            if (!id || !stats[id]) {
+                return item;
             }
-            applyFilters();
-        })
-        .catch(() => {
-            container.innerHTML = '<p class="section-copy">制作実績の読み込みに失敗しました。時間をおいて再度お試しください。</p>';
+            const duration = item.duration || formatDuration(stats[id].duration);
+            const result = item.result || formatViewCount(stats[id].viewCount);
+            return {
+                ...item,
+                duration: duration || item.duration,
+                result: result || item.result
+            };
         });
+
+        container.innerHTML = '';
+        buildFilters(enrichedItems);
+        enrichedItems.forEach((item) => {
+            container.appendChild(createCard(item));
+        });
+
+        // 追加したカードもスクロールで表示アニメーションを適用
+        container.querySelectorAll('.fade').forEach((el) => observer.observe(el));
+
+        const filterWrap = document.getElementById('works-filters');
+        if (filterWrap) {
+            filterWrap.addEventListener('click', (event) => {
+                const button = event.target.closest('.filter-button');
+                if (!button) {
+                    return;
+                }
+                const group = button.dataset.filterGroup;
+                filterWrap.querySelectorAll(`.filter-button[data-filter-group="${group}"]`).forEach((btn) => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
+                applyFilters();
+            });
+        }
+        applyFilters();
+    } catch (error) {
+        container.innerHTML = '<p class="section-copy">制作実績の読み込みに失敗しました。時間をおいて再度お試しください。</p>';
+    }
 };
 
 renderProductions();

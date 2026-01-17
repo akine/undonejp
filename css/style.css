@@ -381,6 +381,11 @@ main {
     overflow: hidden;
 }
 
+.meta-detail {
+    font-size: 13px;
+    color: rgba(181, 192, 214, 0.9);
+}
+
 .arrow-link {
     color: #fff;
     font-weight: 700;
