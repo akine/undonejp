@@ -44,6 +44,46 @@ const renderProductions = () => {
     }
 
     // 日本語の読みやすさを保つため、DOMを組み立てて安全に反映する
+    const getYouTubeId = (url) => {
+        if (!url) {
+            return null;
+        }
+
+        try {
+            const parsed = new URL(url);
+            if (parsed.hostname.includes('youtu.be')) {
+                return parsed.pathname.replace('/', '') || null;
+            }
+            if (parsed.hostname.includes('youtube.com')) {
+                if (parsed.searchParams.get('v')) {
+                    return parsed.searchParams.get('v');
+                }
+                if (parsed.pathname.startsWith('/shorts/')) {
+                    return parsed.pathname.split('/shorts/')[1]?.split('/')[0] || null;
+                }
+                if (parsed.pathname.startsWith('/embed/')) {
+                    return parsed.pathname.split('/embed/')[1]?.split('/')[0] || null;
+                }
+            }
+        } catch (error) {
+            // URLの形式が想定外の場合は自動取得を諦める
+            return null;
+        }
+
+        return null;
+    };
+
+    const resolveThumbnail = (item) => {
+        if (item.thumbnail) {
+            return item.thumbnail;
+        }
+        const youtubeId = getYouTubeId(item.url);
+        if (youtubeId) {
+            return `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+        }
+        return '';
+    };
+
     const createCard = (item) => {
         const article = document.createElement('article');
         article.className = 'card fade';
@@ -51,7 +91,7 @@ const renderProductions = () => {
         const media = document.createElement('div');
         media.className = 'card-media';
         const img = document.createElement('img');
-        img.src = item.thumbnail || '';
+        img.src = resolveThumbnail(item);
         img.alt = item.alt || item.title || '制作実績';
         media.appendChild(img);
 
