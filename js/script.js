@@ -30,3 +30,92 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.2 });
 
 document.querySelectorAll('.fade').forEach((el) => observer.observe(el));
+
+const renderProductions = () => {
+    const container = document.getElementById('works-grid');
+    if (!container) {
+        return;
+    }
+
+    const dataSource = container.getAttribute('data-source');
+    if (!dataSource) {
+        container.innerHTML = '<p class="section-copy">制作実績の読み込み設定が見つかりませんでした。</p>';
+        return;
+    }
+
+    // 日本語の読みやすさを保つため、DOMを組み立てて安全に反映する
+    const createCard = (item) => {
+        const article = document.createElement('article');
+        article.className = 'card fade';
+
+        const media = document.createElement('div');
+        media.className = 'card-media';
+        const img = document.createElement('img');
+        img.src = item.thumbnail || '';
+        img.alt = item.alt || item.title || '制作実績';
+        media.appendChild(img);
+
+        const body = document.createElement('div');
+        body.className = 'card-body';
+
+        const tag = document.createElement('p');
+        tag.className = 'tag';
+        const tagParts = [item.tag, item.platform].filter(Boolean);
+        tag.textContent = tagParts.length ? tagParts.join(' / ') : 'Production';
+
+        const title = document.createElement('h3');
+        title.textContent = item.title || '';
+
+        const meta = document.createElement('p');
+        meta.className = 'meta';
+        meta.textContent = item.role || '';
+
+        body.appendChild(tag);
+        body.appendChild(title);
+        if (item.role) {
+            body.appendChild(meta);
+        }
+
+        if (item.url) {
+            const link = document.createElement('a');
+            link.className = 'arrow-link';
+            link.href = item.url;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = 'Watch';
+            body.appendChild(link);
+        }
+
+        article.appendChild(media);
+        article.appendChild(body);
+        return article;
+    };
+
+    fetch(dataSource)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Failed to load productions data');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            const items = Array.isArray(data) ? data : data.items;
+            if (!Array.isArray(items) || items.length === 0) {
+                container.innerHTML = '<p class="section-copy">現在公開できる制作実績は準備中です。</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            items.forEach((item) => {
+                container.appendChild(createCard(item));
+            });
+
+            // 追加したカードもスクロールで表示アニメーションを適用
+            container.querySelectorAll('.fade').forEach((el) => observer.observe(el));
+        })
+        .catch(() => {
+            container.innerHTML = '<p class="section-copy">制作実績の読み込みに失敗しました。時間をおいて再度お試しください。</p>';
+        });
+};
+
+renderProductions();
