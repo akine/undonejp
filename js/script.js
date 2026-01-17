@@ -130,6 +130,7 @@ const renderProductions = () => {
 
         const title = document.createElement('h3');
         title.textContent = item.title || '';
+        title.title = item.title || '';
 
         const meta = document.createElement('p');
         meta.className = 'meta';
