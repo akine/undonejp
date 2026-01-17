@@ -452,10 +452,10 @@ const renderHomeWorksStaticMetrics = async () => {
     if (!cards.length) {
         return;
     }
-    const urls = cards
-        .map((card) => card.querySelector('.arrow-link')?.getAttribute('href'))
+    const ids = cards
+        .map((card) => card.dataset.youtubeId || card.querySelector('.arrow-link')?.getAttribute('href'))
+        .map((value) => (value?.startsWith('http') ? getYouTubeId(value) : value))
         .filter(Boolean);
-    const ids = urls.map((url) => getYouTubeId(url)).filter(Boolean);
     const uniqueIds = Array.from(new Set(ids));
     if (!uniqueIds.length) {
         return;
@@ -464,10 +464,7 @@ const renderHomeWorksStaticMetrics = async () => {
     const stats = await fetchYouTubeStats(uniqueIds);
     cards.forEach((card) => {
         const link = card.querySelector('.arrow-link');
-        if (!link) {
-            return;
-        }
-        const id = getYouTubeId(link.getAttribute('href'));
+        const id = card.dataset.youtubeId || (link ? getYouTubeId(link.getAttribute('href')) : null);
         const data = id ? stats[id] : null;
         if (!data) {
             return;
