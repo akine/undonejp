@@ -202,15 +202,15 @@ const renderProductions = async () => {
 
         const metrics = [];
         if (item.purpose) {
-            metrics.push(`目的: ${item.purpose}`);
+            metrics.push(item.purpose);
         } else if (item.type) {
-            metrics.push(`種別: ${item.type}`);
+            metrics.push(item.type);
         }
         if (item.duration) {
-            metrics.push(`尺: ${item.duration}`);
+            metrics.push(item.duration);
         }
         if (item.result) {
-            metrics.push(`成果: ${item.result}`);
+            metrics.push(item.result);
         }
         if (metrics.length) {
             const detail = document.createElement('p');
