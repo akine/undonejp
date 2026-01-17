@@ -88,14 +88,14 @@ const renderProductions = () => {
         if (!role) {
             return 'その他';
         }
+        if (role.includes('Undone')) {
+            return 'Undone';
+        }
         if (role.includes('監督')) {
             return '監督・編集';
         }
         if (role.includes('編集')) {
             return '編集';
-        }
-        if (role.includes('制作')) {
-            return '制作';
         }
         return 'その他';
     };
@@ -163,8 +163,18 @@ const renderProductions = () => {
         if (!filterWrap) {
             return;
         }
-        const platforms = ['すべて', ...new Set(items.map((item) => item.platform).filter(Boolean))];
-        const roles = ['すべて', ...new Set(items.map((item) => resolveRoleGroup(item.role || '')))];
+        const platformOrder = ['すべて', 'YouTube', 'TikTok', 'DMM TV', 'イベント配信'];
+        const roleOrder = ['すべて', '監督・編集', '編集', 'Undone', 'その他'];
+        const platformSet = new Set(items.map((item) => item.platform).filter(Boolean));
+        const roleSet = new Set(items.map((item) => resolveRoleGroup(item.role || '')));
+        const platforms = [
+            ...platformOrder.filter((platform) => platform === 'すべて' || platformSet.has(platform)),
+            ...Array.from(platformSet).filter((platform) => !platformOrder.includes(platform))
+        ];
+        const roles = [
+            ...roleOrder.filter((role) => role === 'すべて' || roleSet.has(role)),
+            ...Array.from(roleSet).filter((role) => !roleOrder.includes(role))
+        ];
 
         const createGroup = (label, groupKey, options) => {
             const group = document.createElement('div');
