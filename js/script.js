@@ -225,7 +225,7 @@ const renderProductions = async () => {
             link.href = item.url;
             link.target = '_blank';
             link.rel = 'noopener noreferrer';
-            link.textContent = 'Watch';
+            link.textContent = '見る';
             body.appendChild(link);
         }
 
