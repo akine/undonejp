@@ -1,30 +1,124 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Undone – Coming Soon</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: system-ui, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-      }
-      @supports (height: 100dvh) {
-        body {
-          min-height: 100dvh;
-        }
-      }
-      h1 {
-        font-size: clamp(2rem, 5vw, 4rem);
-        font-weight: 700;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Undone – Coming&nbsp;Soon</h1>
-  </body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Undone</title>
+        <meta name="description" cintent="Undoneオフィシャルページ">
+        <!--ファビコン-->
+        <link rel="icon" href="favicon.ico" size="32x32">
+        <!--OGP-->
+        <meta property="og:title" content="Undone">
+        <meta property="og:title" content="website">
+        <meta property="og:url" content="https://undone.jp/">
+        <meta property="og:image" content="container/ogp.png">
+        <meta property="og:discription" content="「心を動かすストーリー」 -  クリエイティブカンパニー Undone">
+        <meta property="og:site_name" content="Undone">
+        <meta property="og:locale" content="ja_JP">
+        <!--CSS-->
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+        <!--slick-->
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    </head>
+    <body>
+        <header class="main-visual">
+            <div class="header">
+                <h1 class="header-logo"><a href="index.html"><img src="container/logoheaderlogo.svg" alt="Undoneのロゴ"></a></h1>
+                <nav class="navi" id="js-navi"><ul>
+                    <li><a href="lineup.html">Production</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul></nav>
+                <button class="hamburger" id="js-hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <h2 class="maincopy">こころを動かすストーリー</h2>
+                <h2 class="maincopy2">こころを<br>動かす<br>ストーリー</h2>
+            </div>
+        </header>
+        <main>
+            <section class="main-contents">
+                <h3>Done</h3>
+                <div class="content">
+                        <div id="vw-content" class="photo1">
+                            <a href="https://youtu.be/3tHl6a6tjMY?si=aaM1Ew-DB5zt-xMH" target="_blank" rel="noopener noreferrer"><img src="container/lineup/meruputi_mv.jpg" alt="かわいいをスタート ver.2025 / めるぷちofficial"></a>
+                            <h5>「かわいいをスタート 2025 ver」- めるぷちofficial</h5>
+                            <p>担当：撮影補助・編集・2Dエフェクト・VFX</p>
+                        </div>
+                        <div id="vw-content" class="photo2">
+                            <a href="https://www.youtube.com/watch?v=vTfn2sTcBh4" target="_blank" rel="noopener noreferrer"><img src="container/lineup/cul_classroom.jpg" alt="「君、偏差値いくつ？」転校した学校が恐怖過ぎた… / カルドラマ"></a>
+                            <h5>「君、偏差値いくつ？」転校した学校が恐怖過ぎた… - CUL DRAMA</h5>
+                            <p>担当：撮影・編集・一部2Dモーショングラフィックス</p>
+                        </div>
+                        <div id="vw-content" class="photo3">
+                            <a href="https://youtu.be/wEv6s6ubGo0?si=n9VTKEzfJgjWYzfC" target="_blank" rel="noopener noreferrer"><img src="container/lineup/koneshima_buzz.png" alt="俺たちひたすらにバズりたい四人組・バズレンジャー！！！！！ / コネシマex"></a>
+                            <h5>俺たちひたすらにバズりたい四人組・バズレンジャー！！！！！- コネシマex</h5>
+                            <p>担当：編集・サムネイル</p>
+                        </div>
+                        <div id="vw-content" class="photo4">
+                            <a href="https://youtu.be/DuthjfLFSKA?si=XAgYYlpdH3VxHljO" target="_blank" rel="noopener noreferrer"><img src="container/lineup/undone_wagon.png" alt="Case 01 ワゴン&ハーフ&ハーフ / Undone"></a>
+                            <h5>「Case01 ワゴン＆ハーフ＆ハーフ」- UndoneFilms</h5>
+                            <p>Undoneオリジナルショートフィルム</p>
+                        </div>
+                        
+                </div>
+                <div class="main-contentsA">
+                <a href="lineup.html" id="click-box"><p id="click-text">More Productions</p></a>
+                </div>
+            </section>
+        </main>
+        <div class="about">
+                <video src="container/undone_reel_2505_web.mp4" autoplay muted loop></video>
+                <div class="about-cap">
+                    <h4>「こころを動かすストーリー」</h4>
+                    <p>合同会社Undoneは、映像制作における企画・撮影・編集までを一貫して担う、少数精鋭の制作会社です。<br>
+YouTubeなどの配信プラットフォーム向けドラマコンテンツを中心に、スピーディかつ丁寧な対応で、多様な映像ニーズにお応えしております。<br>
+日々の現場を「創作の実験場」ととらえ、試行錯誤を重ねながら表現の幅を広げ、チーム全体で進化し続けることを大切にしています。<br>
+将来的な長編映画や映像賞レースへの挑戦も視野に入れ、信頼できるパートナーの皆様とともに、高品質な作品を創り出してまいります。</p>
+                </div>
+            </div>
+        <div>
+            <h4 id="serviceh4">Service</h4>
+            <h5 id="serviceh5">事業内容</h5>
+            <div class="service">
+                    <div>
+                        <img src="container/filmcamera.png" alt="企画書">
+                        <h4>企画・脚本・撮影・編集</h4>
+                        <p>短編作品やWebドラマ、プロモーション動画など、クライアントの目的や予算に合わせた柔軟な制作プランを提供します。質の高い映像をスピーディーに提供し、お客様の要望に応えます</p>
+                    </div>
+                    <div>
+                        <img src="container/films.png" alt="カメラ">
+                        <h4>配信</h4>
+                        <p>オンラインイベント・ライブ配信</p>
+                        <p>少数のオンライン講座形式からインターネット上のライブ配信といった完全オンラインも対応可能。ご希望であれば配信後のアーカイブ編集や切り抜き等もご提供できます。</p>
+                    </div>
+                    <div>
+                        <img src="container/sourcetime.png" alt="タイムライン">
+                        <h4>プロモーション</h4>
+                        <p>コンテンツの企画・運営をおまかせできます。</p>
+                    </div>
+           </div>
+        </div>
+        <footer>
+            <h2><img src="container/logosfooterlogo.svg"></h2>
+            <ul>
+                <li><a href="about.html" id="click-box-info"><p id="click-text-info">私たちについて</p></a></li>
+            </ul>
+            <div class="copy">
+            <small>&copy; 2025 Undone LLC. All Rights Reserved.</small>
+            </div>
+        </footer>
+    <!--jQuery-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!--slick-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <!--jQuery自作ファイル-->
+    <script src="js/script.js"></script>
+    </body>
 </html>
