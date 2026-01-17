@@ -446,6 +446,94 @@ main {
     margin: 0 0 8px;
 }
 
+.pricing-section {
+    margin-top: 64px;
+}
+
+.pricing-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.pricing-card {
+    background: rgba(7, 9, 14, 0.7);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: var(--shadow);
+}
+
+.pricing-card.highlight {
+    border-color: rgba(10, 107, 255, 0.55);
+    background: linear-gradient(160deg, rgba(10, 107, 255, 0.16), rgba(7, 9, 14, 0.92));
+}
+
+.pricing-head h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+.pricing-sub {
+    color: var(--muted);
+    margin: 0;
+    font-size: 14px;
+}
+
+.pricing-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(10, 107, 255, 0.2);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.price-block {
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+}
+
+.price {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 6px;
+}
+
+.price span {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.price-caption {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.price-option h4 {
+    margin: 0 0 6px;
+    font-size: 16px;
+}
+
+.price-option ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--muted);
+}
+
+.note {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 10px;
+}
+
 .center {
     text-align: center;
     margin-top: 36px;
@@ -556,6 +644,11 @@ main {
         padding: 12px 18px;
     }
 
+    .nav-links .nav-cta {
+        width: min(320px, 82vw);
+        justify-content: center;
+    }
+
     .sp-only {
         display: inline;
     }
@@ -583,7 +676,62 @@ main {
         padding: 48px 6vw 80px;
     }
 
+    .hero-content h1 {
+        font-size: clamp(32px, 8vw, 44px);
+    }
+
+    .hero-content .lede {
+        font-size: 15px;
+        line-height: 1.8;
+    }
+
+    .hero-actions .cta {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .section-header {
+        margin-bottom: 36px;
+    }
+
+    .section-header h2 {
+        font-size: clamp(24px, 6vw, 32px);
+    }
+
+    .card-body {
+        padding: 16px;
+    }
+
+    .service-card {
+        padding: 20px;
+    }
+
+    .about-panel {
+        padding: 18px;
+        min-height: auto;
+    }
+
     .floating-cta {
         display: none;
+    }
+
+    .pricing-card {
+        padding: 20px;
+    }
+
+    .price {
+        font-size: 20px;
+    }
+
+    .price-option ul {
+        padding-left: 16px;
+    }
+
+    .site-footer {
+        padding: 36px 6vw 28px;
+    }
+
+    .footer-links {
+        text-align: left;
     }
 }
