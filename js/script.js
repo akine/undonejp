@@ -447,3 +447,53 @@ const renderHomeWorksMobile = async () => {
 
 renderProductions();
 renderHomeWorksMobile();
+const renderHomeWorksStaticMetrics = async () => {
+    const cards = Array.from(document.querySelectorAll('.home-works-static .card'));
+    if (!cards.length) {
+        return;
+    }
+    const urls = cards
+        .map((card) => card.querySelector('.arrow-link')?.getAttribute('href'))
+        .filter(Boolean);
+    const ids = urls.map((url) => getYouTubeId(url)).filter(Boolean);
+    const uniqueIds = Array.from(new Set(ids));
+    if (!uniqueIds.length) {
+        return;
+    }
+
+    const stats = await fetchYouTubeStats(uniqueIds);
+    cards.forEach((card) => {
+        const link = card.querySelector('.arrow-link');
+        if (!link) {
+            return;
+        }
+        const id = getYouTubeId(link.getAttribute('href'));
+        const data = id ? stats[id] : null;
+        if (!data) {
+            return;
+        }
+        const duration = formatDuration(data.duration);
+        const result = formatViewCount(data.viewCount);
+        const metrics = [duration, result].filter(Boolean);
+        if (!metrics.length) {
+            return;
+        }
+        let detail = card.querySelector('.meta-detail');
+        if (!detail) {
+            detail = document.createElement('p');
+            detail.className = 'meta meta-detail';
+            const meta = card.querySelector('.meta');
+            if (meta) {
+                meta.after(detail);
+            } else {
+                const body = card.querySelector('.card-body');
+                if (body) {
+                    body.appendChild(detail);
+                }
+            }
+        }
+        detail.textContent = metrics.join(' / ');
+    });
+};
+
+renderHomeWorksStaticMetrics();
