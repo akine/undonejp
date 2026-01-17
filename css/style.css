@@ -554,6 +554,48 @@ main {
     box-shadow: var(--shadow);
 }
 
+.pricing-details {
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+}
+
+.pricing-details > summary {
+    list-style: none;
+}
+
+.pricing-details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.pricing-summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pricing-details[open] .when-closed {
+    display: none;
+}
+
+.pricing-details:not([open]) .when-open {
+    display: none;
+}
+
+.pricing-detail {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
 .pricing-card.highlight {
     border-color: rgba(10, 107, 255, 0.55);
     background: linear-gradient(160deg, rgba(10, 107, 255, 0.16), rgba(7, 9, 14, 0.92));
@@ -647,6 +689,23 @@ main {
     gap: 12px;
     flex-wrap: wrap;
     margin-top: 18px;
+}
+
+.contact-email {
+    margin: 18px 0 0;
+}
+
+.contact-email a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.contact-email a::after {
+    content: '↗';
+    font-size: 13px;
 }
 
 .site-footer {
@@ -815,6 +874,15 @@ main {
         padding: 20px;
     }
 
+    .pricing-details {
+        padding-top: 12px;
+    }
+
+    .pricing-summary {
+        width: 100%;
+        justify-content: center;
+    }
+
     .price {
         font-size: 20px;
     }
@@ -850,5 +918,21 @@ main {
 
     .home-works .works-grid .card:nth-child(n+3) {
         display: none;
+    }
+}
+
+@media (min-width: 721px) {
+    .pricing-details {
+        display: contents;
+        border-top: 0;
+        padding-top: 0;
+    }
+
+    .pricing-details > summary {
+        display: none;
+    }
+
+    .pricing-detail {
+        margin-top: 0;
     }
 }
