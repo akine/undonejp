@@ -31,6 +31,27 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.fade').forEach((el) => observer.observe(el));
 
+const syncPricingDetails = () => {
+    const details = Array.from(document.querySelectorAll('.pricing-details'));
+    if (!details.length) {
+        return;
+    }
+    const mediaQuery = window.matchMedia('(min-width: 721px)');
+    const applyState = () => {
+        details.forEach((detail) => {
+            if (mediaQuery.matches) {
+                // PCは常に詳細表示にする
+                detail.setAttribute('open', '');
+            } else {
+                // スマホは折りたたみ表示に戻す
+                detail.removeAttribute('open');
+            }
+        });
+    };
+    applyState();
+    mediaQuery.addEventListener('change', applyState);
+};
+
 const tiktokThumbCache = new Map();
 const dmmThumbCache = new Map();
 
@@ -543,6 +564,7 @@ const renderHomeWorksMobile = async () => {
 
 renderProductions();
 renderHomeWorksMobile();
+syncPricingDetails();
 const renderHomeWorksStaticMetrics = async () => {
     const cards = Array.from(document.querySelectorAll('.home-works-static .card'));
     if (!cards.length) {
