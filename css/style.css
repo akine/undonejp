@@ -973,3 +973,222 @@ main {
         margin-top: 0;
     }
 }
+
+/* Contact Form */
+.contact-section {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 48px;
+    align-items: start;
+}
+
+.contact-form-wrapper {
+    background: rgba(17, 22, 34, 0.7);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 36px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.form-group .required {
+    color: #ff6b6b;
+    margin-left: 4px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background: rgba(7, 9, 14, 0.8);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 16px;
+    color: var(--text);
+    font-family: var(--font-body);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(10, 107, 255, 0.15);
+}
+
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23b5c0d6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.form-actions {
+    margin-top: 8px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.form-message {
+    text-align: center;
+    padding: 48px 24px;
+}
+
+.form-message .message-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 auto 20px;
+}
+
+.form-message.success .message-icon {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.form-message.error .message-icon {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.form-message h3 {
+    font-size: 22px;
+    margin: 0 0 12px;
+}
+
+.form-message p {
+    color: var(--muted);
+    margin: 0 0 24px;
+    line-height: 1.8;
+}
+
+.form-message a {
+    color: var(--accent);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: sticky;
+    top: 100px;
+}
+
+.info-card {
+    background: rgba(17, 22, 34, 0.5);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.info-card h3 {
+    font-size: 14px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 12px;
+}
+
+.info-card p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.info-card .company-name {
+    margin-top: 8px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.info-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--text);
+    font-weight: 600;
+    padding: 10px 16px;
+    background: rgba(10, 107, 255, 0.1);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.info-link:hover {
+    background: rgba(10, 107, 255, 0.2);
+}
+
+@media (max-width: 900px) {
+    .contact-section {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-info {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .info-card {
+        flex: 1;
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 720px) {
+    .contact-form-wrapper {
+        padding: 24px;
+    }
+
+    .contact-info {
+        flex-direction: column;
+    }
+
+    .info-card {
+        min-width: auto;
+    }
+}
