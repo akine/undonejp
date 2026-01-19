@@ -260,6 +260,7 @@ body.menu-open {
 }
 
 .floating-cta {
+    display: none;
     position: fixed;
     right: 24px;
     bottom: 24px;
@@ -269,7 +270,6 @@ body.menu-open {
     padding: 12px 18px;
     border-radius: 14px;
     box-shadow: var(--shadow);
-    display: flex;
     align-items: center;
     gap: 12px;
     font-weight: 700;
@@ -891,6 +891,7 @@ main {
     }
 
     .floating-cta {
+        display: flex;
         right: 16px;
         bottom: 16px;
         padding: 10px 16px;
