@@ -51,6 +51,14 @@ img {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.7) 100%);
 }
 
+body.menu-open .site-header {
+    overflow: visible;
+}
+
+body.menu-open {
+    overflow: hidden;
+}
+
 .site-header.site-header-compact {
     min-height: auto;
 }
@@ -73,10 +81,14 @@ img {
 }
 
 .nav-links {
+    position: fixed;
+    top: 18px;
+    right: 4vw;
     display: flex;
     align-items: center;
     gap: 18px;
     font-weight: 600;
+    z-index: 21;
 }
 
 .nav-links a {
@@ -158,13 +170,29 @@ img {
     border: none;
     padding: 8px;
     cursor: pointer;
+    position: relative;
+    z-index: 25;
 }
 
 .hamburger span {
+    display: block;
     width: 26px;
     height: 2px;
     background: #fff;
     transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 .hero {
@@ -236,6 +264,7 @@ img {
 }
 
 .floating-cta {
+    display: none;
     position: fixed;
     right: 24px;
     bottom: 24px;
@@ -245,7 +274,6 @@ img {
     padding: 12px 18px;
     border-radius: 14px;
     box-shadow: var(--shadow);
-    display: flex;
     align-items: center;
     gap: 12px;
     font-weight: 700;
@@ -762,33 +790,34 @@ main {
 @media (max-width: 960px) {
     .nav-links {
         position: fixed;
-        inset: 0;
-        background: rgba(7, 9, 14, 0.95);
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(7, 9, 14, 0.98);
         backdrop-filter: blur(14px);
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 16px;
-        padding: max(120px, env(safe-area-inset-top, 0px) + 88px) 24px 32px;
-        overflow-y: auto;
+        gap: 24px;
+        padding: 24px;
+        overflow: hidden;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transform: translateY(-8%);
-        transition: transform 0.3s ease, opacity 0.2s ease;
-        z-index: 15;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 100;
     }
 
     .nav-links.open {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transform: translateY(0);
     }
 
     .hamburger {
         display: flex;
-        z-index: 16;
+        z-index: 101;
     }
 
     .nav-links a {
@@ -867,6 +896,14 @@ main {
     }
 
     .floating-cta {
+        display: flex;
+        right: 16px;
+        bottom: 16px;
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    body.menu-open .floating-cta {
         display: none;
     }
 

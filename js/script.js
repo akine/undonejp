@@ -1,13 +1,18 @@
 $(function () {
     const $nav = $('#js-navi');
     const $hamburger = $('#js-hamburger');
+    const $body = $('body');
 
     $hamburger.on('click', function () {
         $nav.toggleClass('open');
+        $hamburger.toggleClass('active');
+        $body.toggleClass('menu-open');
     });
 
     $nav.find('a').on('click', function () {
         $nav.removeClass('open');
+        $hamburger.removeClass('active');
+        $body.removeClass('menu-open');
     });
 
     $('a[href^="#"]').on('click', function (e) {
