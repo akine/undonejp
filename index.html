@@ -22,7 +22,8 @@
     <link rel="stylesheet" href="css/style.css?v=20260120">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Krona+One&family=Quicksand:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 </head>
 <body>
     <header class="site-header">
@@ -46,7 +47,7 @@
         </nav>
         <section class="hero">
             <div class="hero-media">
-                <video src="container/undone_reel_compressed.mp4" autoplay muted loop playsinline preload="none" poster="container/hero-poster.webp"></video>
+                <video src="container/undone_reel_compressed.mp4" autoplay muted loop playsinline preload="none" poster="container/hero-poster.webp" fetchpriority="high"></video>
                 <div class="hero-overlay"></div>
             </div>
             <div class="hero-content">
