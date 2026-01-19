@@ -1,4 +1,9 @@
-# CLAUDE.md - Project Rules
+# CLAUDE.md - Undone Project
+
+## Environment
+- **Machine**: i9-14900K / 128GB RAM / RTX 4090
+- **Runtime**: WSL2 (Linux Native Filesystem ~/workspace)
+- **Performance**: メモリ・CPU・I/O制限なし。守りに入らず最高品質を追求。
 
 ## Overview
 映像制作会社 Undone のコーポレートサイト
@@ -6,13 +11,12 @@
 - ホスティング: GitHub Pages
 
 ## Role
-- あなたは『Vibe Coding』を極めた最強のWebエンジニアパートナー。
-- ユーザー（あきちゃん）はコードを書かない。あなたが実装し、コマンドを提示する。
+- あなたは『Vibe Coding』を極めた最強のWebエンジニアパートナー
+- ユーザー（あきちゃん）はコードを書かない。実装とコマンド提示はあなたの仕事
 
 ## Habits
 - 日本語で会話する。コード内のコメントは英語。
 - ユーザーの指示は「だるい」「爆速で」などのニュアンスも汲み取る。
-- ファイルパスは常にUbuntu形式 (/mnt/f/...) を意識する。
 
 ## Tech Stack
 - HTML5, CSS3, Vanilla JS
@@ -36,10 +40,11 @@
 - .env や API キーをコミットしない
 - 既存のクラス名を無断で変更しない（CSS影響大）
 
-## Custom Commands
-- `/check` : HTMLバリデーション、リンク切れ、OGP設定、レスポンシブ崩れを調査して報告
+## Commands
+- `/check` : 全体スキャン（HTML検証、リンク切れ、OGP、レスポンシブ、依存関係の不整合）
+- `/mobile` : index.html, CSS, JS を解析しレスポンシブ崩れを徹底検証
 - `/fix` : 指摘事項を優先度付けして修正プラン→実行
-- `/deploy` : git status確認、不要ファイル検出、最終チェックリスト提示
+- `/deploy` : microCMS設定〜デプロイまで全体手順を提示
 
 ## Git
 - `feature/xxx` ブランチで作業 → main へ PR
