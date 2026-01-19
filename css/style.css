@@ -786,33 +786,34 @@ main {
 @media (max-width: 960px) {
     .nav-links {
         position: fixed;
-        inset: 0;
-        background: rgba(7, 9, 14, 0.95);
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(7, 9, 14, 0.98);
         backdrop-filter: blur(14px);
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 16px;
-        padding: max(120px, env(safe-area-inset-top, 0px) + 88px) 24px 32px;
-        overflow-y: auto;
+        gap: 24px;
+        padding: 24px;
+        overflow: hidden;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transform: translateY(-8%);
-        transition: transform 0.3s ease, opacity 0.2s ease;
-        z-index: 20;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 100;
     }
 
     .nav-links.open {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transform: translateY(0);
     }
 
     .hamburger {
         display: flex;
-        z-index: 25;
+        z-index: 101;
     }
 
     .nav-links a {
