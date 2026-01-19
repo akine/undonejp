@@ -81,7 +81,7 @@ body.menu-open {
 }
 
 .nav-links {
-    position: fixed;
+    position: absolute;
     top: 18px;
     right: 4vw;
     display: flex;
