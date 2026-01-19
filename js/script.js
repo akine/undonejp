@@ -4,10 +4,12 @@ $(function () {
 
     $hamburger.on('click', function () {
         $nav.toggleClass('open');
+        $hamburger.toggleClass('active');
     });
 
     $nav.find('a').on('click', function () {
         $nav.removeClass('open');
+        $hamburger.removeClass('active');
     });
 
     $('a[href^="#"]').on('click', function (e) {

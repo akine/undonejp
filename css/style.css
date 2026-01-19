@@ -158,13 +158,29 @@ img {
     border: none;
     padding: 8px;
     cursor: pointer;
+    position: relative;
+    z-index: 25;
 }
 
 .hamburger span {
+    display: block;
     width: 26px;
     height: 2px;
     background: #fff;
     transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 .hero {
@@ -776,7 +792,7 @@ main {
         pointer-events: none;
         transform: translateY(-8%);
         transition: transform 0.3s ease, opacity 0.2s ease;
-        z-index: 15;
+        z-index: 20;
     }
 
     .nav-links.open {
@@ -788,7 +804,7 @@ main {
 
     .hamburger {
         display: flex;
-        z-index: 16;
+        z-index: 25;
     }
 
     .nav-links a {
