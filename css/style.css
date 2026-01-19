@@ -815,6 +815,10 @@ main {
         pointer-events: auto;
     }
 
+    .nav-bar {
+        z-index: 102;
+    }
+
     .hamburger {
         display: flex;
         z-index: 101;
