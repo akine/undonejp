@@ -116,7 +116,7 @@ ${message}
             },
             body: JSON.stringify({
                 from: 'Undone Contact <contact@undone.jp>',
-                to: ['info@undone.jp'],
+                to: ['support@undone.jp'],
                 reply_to: email,
                 subject: `【お問い合わせ】${category || 'Webサイト'} - ${name}`,
                 text: emailBody,
