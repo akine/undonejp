@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="container/ogp.png" alt="Undone" width="600">
+  <img src="container/logoheaderlogo.svg" alt="Undone" width="280">
 </p>
 
 <h1 align="center">Undone Official Website</h1>
