@@ -81,10 +81,14 @@ body.menu-open {
 }
 
 .nav-links {
+    position: fixed;
+    top: 18px;
+    right: 4vw;
     display: flex;
     align-items: center;
     gap: 18px;
     font-weight: 600;
+    z-index: 21;
 }
 
 .nav-links a {
