@@ -104,11 +104,11 @@ python -m http.server 8000
 ## Contact
 
 <p>
-  <a href="https://form.run/@undone-33ZwMm0JsvD5iTRwIpOS">
+  <a href="https://undone.jp/contact.html">
     <img src="https://img.shields.io/badge/お問い合わせ-Form-0a6bff?style=for-the-badge" alt="Contact Form">
   </a>
-  <a href="mailto:info@undone.jp">
-    <img src="https://img.shields.io/badge/Email-info%40undone.jp-gray?style=for-the-badge" alt="Email">
+  <a href="mailto:support@undone.jp">
+    <img src="https://img.shields.io/badge/Email-support%40undone.jp-gray?style=for-the-badge" alt="Email">
   </a>
 </p>
 

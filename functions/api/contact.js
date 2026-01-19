@@ -1,3 +1,14 @@
+// Escape HTML special characters to prevent injection
+function escapeHtml(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 export async function onRequestPost(context) {
     const { request, env } = context;
 
@@ -79,23 +90,23 @@ ${message}
         <div class="content">
             <div class="field">
                 <div class="label">お問い合わせ種別</div>
-                <div class="value">${category || '未選択'}</div>
+                <div class="value">${escapeHtml(category) || '未選択'}</div>
             </div>
             <div class="field">
                 <div class="label">お名前</div>
-                <div class="value">${name}</div>
+                <div class="value">${escapeHtml(name)}</div>
             </div>
             <div class="field">
                 <div class="label">会社名・団体名</div>
-                <div class="value">${company || '未記入'}</div>
+                <div class="value">${escapeHtml(company) || '未記入'}</div>
             </div>
             <div class="field">
                 <div class="label">メールアドレス</div>
-                <div class="value"><a href="mailto:${email}">${email}</a></div>
+                <div class="value"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></div>
             </div>
             <div class="field">
                 <div class="label">お問い合わせ内容</div>
-                <div class="message">${message.replace(/\n/g, '<br>')}</div>
+                <div class="message">${escapeHtml(message).replace(/\n/g, '<br>')}</div>
             </div>
         </div>
         <div class="footer">
