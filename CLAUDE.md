@@ -25,9 +25,9 @@
 - ユーザーの指示は「だるい」「爆速で」などのニュアンスも汲み取る。
 
 ## Tech Stack
-- HTML5, CSS3, Vanilla JS
+- HTML5, CSS3, Vanilla JS（jQuery不要）
 - JSON駆動 (assets/data/productions.json)
-- jQuery (slick.js使用)
+- WebP画像 + 圧縮動画（パフォーマンス最適化済み）
 
 ## Design Tokens
 - **Background**: #000 / #111
