@@ -51,6 +51,14 @@ img {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.7) 100%);
 }
 
+body.menu-open .site-header {
+    overflow: visible;
+}
+
+body.menu-open {
+    overflow: hidden;
+}
+
 .site-header.site-header-compact {
     min-height: auto;
 }
@@ -883,6 +891,13 @@ main {
     }
 
     .floating-cta {
+        right: 16px;
+        bottom: 16px;
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    body.menu-open .floating-cta {
         display: none;
     }
 
