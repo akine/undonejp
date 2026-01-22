@@ -88,17 +88,26 @@ const fetchFromMicroCMS = async (limit = 100) => {
     return data.contents || [];
 };
 
-const transformMicroCMSItem = (item) => ({
-    title: item.title || '',
-    tag: item.tag || '',
-    platform: item.platform || '',
-    role: item.role || '',
-    url: item.url || '',
-    thumbnail: item.thumbnail?.url || '',
-    releaseDate: item.releaseDate || '',
-    featured: item.featured || false,
-    sortOrder: item.sortOrder || 0
-});
+const transformMicroCMSItem = (item) => {
+    // microCMSの値を正規化（配列の場合は最初の要素、文字列はtrim）
+    const normalize = (val) => {
+        if (Array.isArray(val)) {
+            return (val[0] || '').toString().trim();
+        }
+        return (val || '').toString().trim();
+    };
+    return {
+        title: normalize(item.title),
+        tag: normalize(item.tag),
+        platform: normalize(item.platform),
+        role: normalize(item.role),
+        url: normalize(item.url),
+        thumbnail: item.thumbnail?.url || '',
+        releaseDate: normalize(item.releaseDate),
+        featured: Boolean(item.featured),
+        sortOrder: Number(item.sortOrder) || 0
+    };
+};
 
 const formatDuration = (iso) => {
     if (!iso) {
