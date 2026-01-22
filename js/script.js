@@ -461,7 +461,7 @@ const renderProductions = async () => {
         filterWrap.innerHTML = '';
         createGroup('プラットフォーム', 'platform', platforms);
         createGroup('担当', 'role', roles);
-        createGroup('並び替え', 'sort', ['再生数順', '新しい順']);
+        createGroup('並び替え', 'sort', ['再生数順', '新しい順', 'ランダム']);
     };
 
     const applyFilters = () => {
@@ -482,13 +482,15 @@ const renderProductions = async () => {
             if (sortType === '新しい順') {
                 const dateA = a.dataset.releaseDate || '';
                 const dateB = b.dataset.releaseDate || '';
-                // 日付がない場合は後ろに
                 if (!dateA && !dateB) return 0;
                 if (!dateA) return 1;
                 if (!dateB) return -1;
                 return dateB.localeCompare(dateA);
             }
-            // デフォルト: 再生数順（多い順、再生数なしは後ろ）
+            if (sortType === 'ランダム') {
+                return Math.random() - 0.5;
+            }
+            // デフォルト: 再生数順
             const countA = Number(a.dataset.viewCount || 0);
             const countB = Number(b.dataset.viewCount || 0);
             return countB - countA;
