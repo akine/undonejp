@@ -495,6 +495,15 @@ const renderProductions = async () => {
         });
         cards.forEach((card) => container.appendChild(card));
 
+        // Re-trigger fade animation with stagger (max 500ms total)
+        const staggerDelay = Math.min(20, 500 / cards.length);
+        cards.forEach((card) => card.classList.remove('visible'));
+        requestAnimationFrame(() => {
+            cards.forEach((card, i) => {
+                setTimeout(() => card.classList.add('visible'), i * staggerDelay);
+            });
+        });
+
         // Apply filters
         let visibleCount = 0;
         cards.forEach((card) => {
