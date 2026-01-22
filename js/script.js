@@ -461,7 +461,7 @@ const renderProductions = async () => {
         filterWrap.innerHTML = '';
         createGroup('プラットフォーム', 'platform', platforms);
         createGroup('担当', 'role', roles);
-        createGroup('並び替え', 'sort', ['デフォルト', '再生数順', '新しい順', '古い順']);
+        createGroup('並び替え', 'sort', ['再生数順', '新しい順']);
     };
 
     const applyFilters = () => {
@@ -477,23 +477,21 @@ const renderProductions = async () => {
 
         // Sort cards
         const cards = Array.from(container.querySelectorAll('.card'));
-        const sortType = filters.sort || 'デフォルト';
+        const sortType = filters.sort || '再生数順';
         cards.sort((a, b) => {
-            if (sortType === '再生数順') {
-                return Number(b.dataset.viewCount || 0) - Number(a.dataset.viewCount || 0);
-            }
             if (sortType === '新しい順') {
                 const dateA = a.dataset.releaseDate || '';
                 const dateB = b.dataset.releaseDate || '';
+                // 日付がない場合は後ろに
+                if (!dateA && !dateB) return 0;
+                if (!dateA) return 1;
+                if (!dateB) return -1;
                 return dateB.localeCompare(dateA);
             }
-            if (sortType === '古い順') {
-                const dateA = a.dataset.releaseDate || '';
-                const dateB = b.dataset.releaseDate || '';
-                return dateA.localeCompare(dateB);
-            }
-            // デフォルト: 元の順序に戻す
-            return Number(a.dataset.originalIndex || 0) - Number(b.dataset.originalIndex || 0);
+            // デフォルト: 再生数順（多い順、再生数なしは後ろ）
+            const countA = Number(a.dataset.viewCount || 0);
+            const countB = Number(b.dataset.viewCount || 0);
+            return countB - countA;
         });
         cards.forEach((card) => container.appendChild(card));
 
