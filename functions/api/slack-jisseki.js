@@ -308,9 +308,9 @@ async function registerProduction(args, env) {
     const payload = {
         title,
         url,
-        platform: [platform],  // microCMS select field requires array
+        platform: [platform],
         role,
-        tag: tag || '',
+        tag: [tag],
         featured: featured || false,
         releaseDate: releaseDate || '',
         sortOrder: 0
