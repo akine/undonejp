@@ -1,6 +1,6 @@
 # CLAUDE.md - Undone Corporate Site
 
-> 映像制作会社 Undone のコーポレートサイト。静的HTML + Vanilla JS + CSS。GitHub Pages でホスティング。
+> 映像制作会社 Undone のコーポレートサイト。静的HTML + Vanilla JS + CSS。Cloudflare Pages でホスティング。microCMS + Slack連携。
 
 ## Identity
 
@@ -25,9 +25,13 @@
 │   └── style.css       # メインCSS
 ├── js/
 │   └── script.js       # メインJS
-├── assets/
-│   └── data/
-│       └── productions.json  # 制作実績データ（JSON駆動）
+├── functions/
+│   └── api/            # Cloudflare Workers
+│       ├── youtube.js      # YouTube API
+│       ├── tiktok.js       # TikTok oEmbed
+│       ├── dmm-thumbnail.js # DMM サムネイル
+│       ├── contact.js      # お問い合わせフォーム
+│       └── slack-jisseki.js # Slack /jisseki コマンド
 └── container/          # 画像・動画アセット（WebP + 圧縮MP4）
 ```
 
@@ -40,9 +44,10 @@
 | Markup | HTML5 |
 | Styling | CSS3（Vanilla、フレームワークなし） |
 | Script | Vanilla JS（jQuery 不要） |
-| Data | JSON (`assets/data/productions.json`) |
+| CMS | microCMS（制作実績管理） |
+| API | Cloudflare Workers（YouTube/TikTok/Slack連携） |
 | Assets | WebP 画像 + 圧縮 MP4 |
-| Hosting | GitHub Pages |
+| Hosting | Cloudflare Pages |
 | Domain | undone.jp |
 
 ---
@@ -133,6 +138,28 @@
   "url": "https://..."
 }
 ```
+
+---
+
+## Slack Integration
+
+### /jisseki コマンド
+
+Slackから制作実績をmicroCMSに登録できる。
+
+**使い方：**
+1. Slackで `/jisseki` を入力
+2. モーダルでURL・担当業務・カテゴリを入力
+3. 登録完了→DMで通知
+
+**機能：**
+- YouTube/TikTok URLからタイトル自動取得
+- 登録完了DMに「🗑️ 取り消す」ボタン付き（ミス登録の即削除用）
+
+**必要な環境変数（Cloudflare Pages）：**
+- `SLACK_BOT_TOKEN` - Slack Bot Token
+- `MICROCMS_WRITE_KEY` - microCMS書き込みキー（DELETE権限必須）
+- `YOUTUBE_API_KEY` - YouTube Data API キー
 
 ---
 

@@ -57,7 +57,8 @@ undonejp/
         ├── youtube.js      # YouTube API (再生数・公開日取得)
         ├── tiktok.js       # TikTok oEmbed
         ├── dmm-thumbnail.js # DMM サムネイル取得
-        └── contact.js      # お問い合わせフォーム
+        ├── contact.js      # お問い合わせフォーム
+        └── slack-jisseki.js # Slack /jisseki コマンド
 ```
 
 ## Local Development
@@ -115,6 +116,31 @@ python -m http.server 8000
 
 - **YouTube動画**: 自動取得（YouTube API経由）
 - **その他**: 手動で`releaseDate`を入力
+
+---
+
+## Slack 連携
+
+### /jisseki コマンド
+
+Slackから制作実績を直接登録できます。
+
+```
+/jisseki
+```
+
+**入力項目：**
+| 項目 | 説明 |
+|------|------|
+| URL | YouTube / TikTok のリンク |
+| 担当業務 | 「撮影・編集」など |
+| カテゴリ | ドラマ / バラエティ / Shorts / MV / 企業VP |
+| Featured | トップページに表示する場合はチェック |
+
+**機能：**
+- YouTube/TikTok URLからタイトル自動取得
+- 登録完了はDMで通知
+- 間違えた場合は「🗑️ 取り消す」ボタンで削除可能
 
 ---
 
