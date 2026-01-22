@@ -69,7 +69,7 @@ const dmmThumbCache = new Map();
 
 // microCMS設定
 const MICROCMS_CONFIG = {
-    serviceDomain: 'undone-productions',
+    serviceDomain: '7ektxje7is',
     apiKey: 'CCak6hOuIEp4rE0deKXxSGaWAH54K0jMJH6J',
     endpoint: 'productions'
 };
