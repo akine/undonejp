@@ -648,53 +648,68 @@ const renderHomeWorksMobile = async () => {
     mediaQuery.addEventListener('change', render);
 };
 
-renderProductions();
-renderHomeWorksMobile();
-syncPricingDetails();
-const renderHomeWorksStaticMetrics = async () => {
-    const cards = Array.from(document.querySelectorAll('.home-works-static .card'));
-    if (!cards.length) {
-        return;
-    }
-    const ids = cards
-        .map((card) => card.dataset.youtubeId || card.querySelector('.arrow-link')?.getAttribute('href'))
-        .map((value) => (value?.startsWith('http') ? getYouTubeId(value) : value))
-        .filter(Boolean);
-    const uniqueIds = Array.from(new Set(ids));
-    if (!uniqueIds.length) {
+const renderHomeWorksFeatured = async () => {
+    const container = document.getElementById('home-works-featured');
+    if (!container) {
         return;
     }
 
-    const stats = await fetchYouTubeStats(uniqueIds);
-    cards.forEach((card) => {
-        const link = card.querySelector('.arrow-link');
-        const id = card.dataset.youtubeId || (link ? getYouTubeId(link.getAttribute('href')) : null);
-        const data = id ? stats[id] : null;
-        if (!data) {
+    const mediaQuery = window.matchMedia('(min-width: 721px)');
+
+    const render = async () => {
+        if (!mediaQuery.matches) {
+            container.innerHTML = '';
             return;
         }
-        const duration = formatDuration(data.duration);
-        const result = formatViewCount(data.viewCount);
-        const metrics = [duration, result].filter(Boolean);
-        if (!metrics.length) {
-            return;
-        }
-        let detail = card.querySelector('.meta-detail');
-        if (!detail) {
-            detail = document.createElement('p');
-            detail.className = 'meta meta-detail';
-            const meta = card.querySelector('.meta');
-            if (meta) {
-                meta.after(detail);
-            } else {
-                const body = card.querySelector('.card-body');
-                if (body) {
-                    body.appendChild(detail);
-                }
+        try {
+            const rawItems = await fetchFromMicroCMS(100);
+            const items = rawItems.map(transformMicroCMSItem);
+            if (!Array.isArray(items) || items.length === 0) {
+                return;
             }
+
+            const ids = items.map((item) => getYouTubeId(item.url)).filter(Boolean);
+            const uniqueIds = Array.from(new Set(ids));
+            const stats = await fetchYouTubeStats(uniqueIds);
+            const tiktokUrls = items
+                .filter((item) => item.platform === 'TikTok' && !item.thumbnail && item.url)
+                .map((item) => item.url);
+            const dmmUrls = items
+                .filter((item) => item.platform === 'DMM TV' && !item.thumbnail && item.url)
+                .map((item) => item.url);
+            const [tiktokThumbs, dmmThumbs] = await Promise.all([
+                fetchTikTokThumbs(tiktokUrls),
+                fetchDmmThumbs(dmmUrls)
+            ]);
+            const enrichedItems = buildEnrichedItems(items, stats, tiktokThumbs, dmmThumbs);
+
+            // featured優先、残りは再生数順で4件選出
+            const featured = enrichedItems.filter((item) => item.featured);
+            const nonFeatured = enrichedItems
+                .filter((item) => !item.featured)
+                .sort((a, b) => Number(b.viewCount || 0) - Number(a.viewCount || 0));
+            const selected = [...featured, ...nonFeatured].slice(0, 4);
+
+            if (!selected.length) {
+                return;
+            }
+
+            container.innerHTML = '';
+            selected.forEach((item) => {
+                const card = createCard(item);
+                container.appendChild(card);
+                observer.observe(card);
+            });
+        } catch (error) {
+            // エラー時は何も表示しない
         }
-        detail.textContent = metrics.join(' / ');
-    });
+    };
+
+    render();
+    mediaQuery.addEventListener('change', render);
 };
 
-renderHomeWorksStaticMetrics();
+renderProductions();
+renderHomeWorksMobile();
+renderHomeWorksFeatured();
+syncPricingDetails();
