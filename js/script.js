@@ -359,6 +359,8 @@ const createCard = (item) => {
     article.appendChild(body);
     article.dataset.platform = item.platform || 'その他';
     article.dataset.role = resolveRoleGroup(item.role || '');
+    article.dataset.viewCount = item.viewCount || 0;
+    article.dataset.releaseDate = item.releaseDate || '';
     return article;
 };
 
@@ -457,6 +459,7 @@ const renderProductions = async () => {
         filterWrap.innerHTML = '';
         createGroup('プラットフォーム', 'platform', platforms);
         createGroup('担当', 'role', roles);
+        createGroup('並び替え', 'sort', ['デフォルト', '再生数順', '新しい順', '古い順']);
     };
 
     const applyFilters = () => {
@@ -470,7 +473,29 @@ const renderProductions = async () => {
             return acc;
         }, {});
 
-        const cards = container.querySelectorAll('.card');
+        // Sort cards
+        const cards = Array.from(container.querySelectorAll('.card'));
+        const sortType = filters.sort || 'デフォルト';
+        cards.sort((a, b) => {
+            if (sortType === '再生数順') {
+                return Number(b.dataset.viewCount || 0) - Number(a.dataset.viewCount || 0);
+            }
+            if (sortType === '新しい順') {
+                const dateA = a.dataset.releaseDate || '';
+                const dateB = b.dataset.releaseDate || '';
+                return dateB.localeCompare(dateA);
+            }
+            if (sortType === '古い順') {
+                const dateA = a.dataset.releaseDate || '';
+                const dateB = b.dataset.releaseDate || '';
+                return dateA.localeCompare(dateB);
+            }
+            // デフォルト: 元の順序に戻す
+            return Number(a.dataset.originalIndex || 0) - Number(b.dataset.originalIndex || 0);
+        });
+        cards.forEach((card) => container.appendChild(card));
+
+        // Apply filters
         let visibleCount = 0;
         cards.forEach((card) => {
             const platformMatch = !filters.platform || filters.platform === 'すべて' || card.dataset.platform === filters.platform;
@@ -514,8 +539,10 @@ const renderProductions = async () => {
 
         container.innerHTML = '';
         buildFilters(enrichedItems);
-        enrichedItems.forEach((item) => {
-            container.appendChild(createCard(item));
+        enrichedItems.forEach((item, index) => {
+            const card = createCard(item);
+            card.dataset.originalIndex = index;
+            container.appendChild(card);
         });
 
         // 追加したカードもスクロールで表示アニメーションを適用
