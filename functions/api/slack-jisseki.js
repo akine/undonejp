@@ -22,12 +22,16 @@ export async function onRequestPost(context) {
         body = await request.json();
     }
 
-    // Check if this is a modal submission (Interactivity)
+    // Check if this is an interaction (modal submission or button click)
     if (body.payload) {
         const payload = JSON.parse(body.payload);
 
         if (payload.type === 'view_submission') {
             return handleModalSubmission(payload, env);
+        }
+
+        if (payload.type === 'block_actions') {
+            return handleBlockActions(payload, env);
         }
 
         // Unknown interaction type
@@ -203,11 +207,13 @@ async function handleModalSubmission(payload, env) {
         // Send result to user via DM or channel
         if (userId && env.SLACK_BOT_TOKEN) {
             const tagLabel = TAG_OPTIONS.find(t => t.value === tag)?.text || tag;
-            const message = result.success
-                ? `✅ 登録完了!\n*${result.title}*\nプラットフォーム: ${result.platform}\n担当: ${role}\nカテゴリ: ${tagLabel}${featured ? '\n⭐ Featured' : ''}`
-                : `❌ 登録失敗: ${result.error}`;
 
-            await sendDirectMessage(userId, message, env.SLACK_BOT_TOKEN);
+            if (result.success) {
+                const message = `✅ 登録完了!\n*${result.title}*\nプラットフォーム: ${result.platform}\n担当: ${role}\nカテゴリ: ${tagLabel}${featured ? '\n⭐ Featured' : ''}`;
+                await sendDirectMessageWithDeleteButton(userId, message, result.id, result.title, env.SLACK_BOT_TOKEN);
+            } else {
+                await sendDirectMessage(userId, `❌ 登録失敗: ${result.error}`, env.SLACK_BOT_TOKEN);
+            }
         }
 
         // Close modal
@@ -272,6 +278,140 @@ async function sendDirectMessage(userId, text, botToken) {
     }
 }
 
+async function sendDirectMessageWithDeleteButton(userId, text, contentId, title, botToken) {
+    try {
+        // Open DM channel
+        const openResponse = await fetch('https://slack.com/api/conversations.open', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${botToken}`
+            },
+            body: JSON.stringify({ users: userId })
+        });
+
+        const openData = await openResponse.json();
+        if (!openData.ok) return;
+
+        const channelId = openData.channel?.id;
+        if (!channelId) return;
+
+        // Send message with delete button
+        await fetch('https://slack.com/api/chat.postMessage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${botToken}`
+            },
+            body: JSON.stringify({
+                channel: channelId,
+                text,
+                blocks: [
+                    {
+                        type: 'section',
+                        text: {
+                            type: 'mrkdwn',
+                            text
+                        }
+                    },
+                    {
+                        type: 'actions',
+                        elements: [
+                            {
+                                type: 'button',
+                                text: {
+                                    type: 'plain_text',
+                                    text: '🗑️ 取り消す',
+                                    emoji: true
+                                },
+                                style: 'danger',
+                                action_id: 'delete_production',
+                                value: JSON.stringify({ id: contentId, title })
+                            }
+                        ]
+                    }
+                ]
+            })
+        });
+    } catch {
+        // Ignore DM errors
+    }
+}
+
+async function handleBlockActions(payload, env) {
+    const action = payload.actions?.[0];
+
+    if (action?.action_id === 'delete_production') {
+        const { id, title } = JSON.parse(action.value);
+        const userId = payload.user?.id;
+        const channelId = payload.channel?.id;
+        const messageTs = payload.message?.ts;
+
+        // Delete from microCMS
+        const deleteResult = await deleteProduction(id, env);
+
+        if (deleteResult.success) {
+            // Update message to show deleted
+            if (channelId && messageTs && env.SLACK_BOT_TOKEN) {
+                await fetch('https://slack.com/api/chat.update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${env.SLACK_BOT_TOKEN}`
+                    },
+                    body: JSON.stringify({
+                        channel: channelId,
+                        ts: messageTs,
+                        text: `🗑️ 削除しました\n~${title}~`,
+                        blocks: [
+                            {
+                                type: 'section',
+                                text: {
+                                    type: 'mrkdwn',
+                                    text: `🗑️ 削除しました\n~*${title}*~`
+                                }
+                            }
+                        ]
+                    })
+                });
+            }
+        } else {
+            // Send error message
+            if (userId && env.SLACK_BOT_TOKEN) {
+                await sendDirectMessage(userId, `❌ 削除失敗: ${deleteResult.error}`, env.SLACK_BOT_TOKEN);
+            }
+        }
+    }
+
+    // Acknowledge the action
+    return new Response('', { status: 200 });
+}
+
+async function deleteProduction(contentId, env) {
+    const microCmsKey = env.MICROCMS_WRITE_KEY;
+    if (!microCmsKey) {
+        return { success: false, error: 'MICROCMS_WRITE_KEY not configured' };
+    }
+
+    try {
+        const response = await fetch(`https://7ektxje7is.microcms.io/api/v1/productions/${contentId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-MICROCMS-API-KEY': microCmsKey
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            return { success: false, error: `microCMS error: ${response.status} ${errorText}` };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
 async function registerProduction(args, env) {
     const { url, role, tag, featured } = args;
 
@@ -330,7 +470,8 @@ async function registerProduction(args, env) {
         return { success: false, error: `microCMS error: ${response.status} ${errorText}` };
     }
 
-    return { success: true, title, platform };
+    const result = await response.json();
+    return { success: true, title, platform, id: result.id };
 }
 
 function detectPlatform(url) {
