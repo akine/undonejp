@@ -384,11 +384,13 @@ const buildEnrichedItems = (items, stats, tiktokThumbs = {}, dmmThumbs = {}) => 
     const duration = item.duration || formatDuration(stats[id].duration);
     const result = item.result || formatViewCount(stats[id].viewCount);
     const viewCount = Number(stats[id].viewCount);
+    const releaseDate = item.releaseDate || stats[id].publishedAt || '';
     return {
         ...item,
         duration: duration || item.duration,
         result: result || item.result,
         viewCount: Number.isFinite(viewCount) ? viewCount : item.viewCount,
+        releaseDate,
         thumbnail: item.thumbnail || tiktokThumbs[item.url] || dmmThumbs[item.url]
     };
 });

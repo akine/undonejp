@@ -35,7 +35,7 @@ export async function onRequestGet(context) {
         const responses = await Promise.all(
             batches.map(async (batch) => {
                 const params = new URLSearchParams({
-                    part: 'contentDetails,statistics',
+                    part: 'snippet,contentDetails,statistics',
                     id: batch.join(','),
                     key: apiKey
                 });
@@ -53,7 +53,8 @@ export async function onRequestGet(context) {
             (data.items || []).forEach((item) => {
                 items[item.id] = {
                     duration: item.contentDetails?.duration || null,
-                    viewCount: item.statistics?.viewCount || null
+                    viewCount: item.statistics?.viewCount || null,
+                    publishedAt: item.snippet?.publishedAt || null
                 };
             });
         });
