@@ -67,6 +67,39 @@ const syncPricingDetails = () => {
 const tiktokThumbCache = new Map();
 const dmmThumbCache = new Map();
 
+// microCMS設定
+const MICROCMS_CONFIG = {
+    serviceDomain: 'undone-productions',
+    apiKey: 'CCak6hOuIEp4rE0deKXxSGaWAH54K0jMJH6J',
+    endpoint: 'productions'
+};
+
+const fetchFromMicroCMS = async (limit = 100) => {
+    const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?limit=${limit}`;
+    const response = await fetch(url, {
+        headers: {
+            'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey
+        }
+    });
+    if (!response.ok) {
+        throw new Error('Failed to fetch from microCMS');
+    }
+    const data = await response.json();
+    return data.contents || [];
+};
+
+const transformMicroCMSItem = (item) => ({
+    title: item.title || '',
+    tag: item.tag || '',
+    platform: item.platform || '',
+    role: item.role || '',
+    url: item.url || '',
+    thumbnail: item.thumbnail?.url || '',
+    releaseDate: item.releaseDate || '',
+    featured: item.featured || false,
+    sortOrder: item.sortOrder || 0
+});
+
 const formatDuration = (iso) => {
     if (!iso) {
         return null;
@@ -447,12 +480,9 @@ const renderProductions = async () => {
     };
 
     try {
-        const response = await fetch(dataSource);
-        if (!response.ok) {
-            throw new Error('Failed to load productions data');
-        }
-        const data = await response.json();
-        const items = Array.isArray(data) ? data : data.items;
+        // microCMSからデータ取得
+        const rawItems = await fetchFromMicroCMS(100);
+        const items = rawItems.map(transformMicroCMSItem);
         if (!Array.isArray(items) || items.length === 0) {
             container.innerHTML = '<p class="section-copy">現在公開できる制作実績は準備中です。</p>';
             return;
@@ -521,12 +551,9 @@ const renderHomeWorksMobile = async () => {
             return;
         }
         try {
-            const response = await fetch(dataSource);
-            if (!response.ok) {
-                throw new Error('Failed to load productions data');
-            }
-            const data = await response.json();
-            const items = Array.isArray(data) ? data : data.items;
+            // microCMSからデータ取得
+            const rawItems = await fetchFromMicroCMS(100);
+            const items = rawItems.map(transformMicroCMSItem);
             if (!Array.isArray(items) || items.length === 0) {
                 container.innerHTML = '<p class="section-copy">現在公開できる制作実績は準備中です。</p>';
                 return;
