@@ -144,27 +144,10 @@ Slackから制作実績を直接登録できます。
 
 ---
 
-## Local Development
-
-```bash
-# リポジトリをクローン
-git clone https://github.com/akine/undonejp.git
-cd undonejp
-
-# ローカルサーバーを起動
-python -m http.server 8000
-```
-
-ブラウザで http://localhost:8000 にアクセス
-
-> **Note**: microCMSのデータはローカルでも取得されます（APIキーがフロントエンドに含まれているため）
-
----
-
 ## Contact
 
 <p>
-  <a href="https://undone.jp/contact.html">
+  <a href="https://undone.jp/contact">
     <img src="https://img.shields.io/badge/お問い合わせ-Form-0a6bff?style=for-the-badge" alt="Contact Form">
   </a>
   <a href="mailto:support@undone.jp">
