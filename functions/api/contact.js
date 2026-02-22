@@ -12,6 +12,32 @@ function escapeHtml(str) {
 export async function onRequestPost(context) {
     const { request, env } = context;
 
+    // CSRF対策: Originヘッダーチェック
+    const origin = request.headers.get('Origin') || request.headers.get('Referer');
+    const allowedOrigins = [
+        'https://undone.jp',
+        'https://www.undone.jp',
+        'https://undonejp.pages.dev' // Cloudflare Pages preview domain
+    ];
+    
+    if (origin) {
+        try {
+            const originUrl = new URL(origin);
+            const originHost = `${originUrl.protocol}//${originUrl.host}`;
+            if (!allowedOrigins.includes(originHost)) {
+                return new Response(JSON.stringify({ error: 'CSRF: Invalid origin' }), {
+                    status: 403,
+                    headers: { 'content-type': 'application/json; charset=utf-8' }
+                });
+            }
+        } catch (error) {
+            return new Response(JSON.stringify({ error: 'CSRF: Invalid origin format' }), {
+                status: 403,
+                headers: { 'content-type': 'application/json; charset=utf-8' }
+            });
+        }
+    }
+
     // Resend API キー
     const apiKey = env.RESEND_API_KEY;
     if (!apiKey) {
@@ -37,6 +63,74 @@ export async function onRequestPost(context) {
     // バリデーション
     if (!name || !email || !message) {
         return new Response(JSON.stringify({ error: 'Missing required fields' }), {
+            status: 400,
+            headers: { 'content-type': 'application/json; charset=utf-8' }
+        });
+    }
+
+    // メールヘッダインジェクション対策: email、name、categoryの検証
+    const validateInput = (input, fieldName) => {
+        if (!input) return true; // null/undefinedは許可（オプショナルフィールド）
+        
+        const str = String(input);
+        // 改行文字、復帰文字、タブ文字の検出
+        if (str.includes('\n') || str.includes('\r') || str.includes('\t')) {
+            return false;
+        }
+        // 制御文字の検出
+        if (/[\x00-\x1F\x7F]/.test(str)) {
+            return false;
+        }
+        // フィールド長制限
+        const limits = {
+            name: 100,
+            company: 200,
+            email: 320, // RFC5321準拠
+            category: 100,
+            message: 5000
+        };
+        if (str.length > (limits[fieldName] || 1000)) {
+            return false;
+        }
+        return true;
+    };
+
+    // 厳密なメールアドレス検証
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email) && validateInput(email, 'email');
+    };
+
+    if (!validateInput(name, 'name')) {
+        return new Response(JSON.stringify({ error: 'Invalid name format' }), {
+            status: 400,
+            headers: { 'content-type': 'application/json; charset=utf-8' }
+        });
+    }
+
+    if (!validateEmail(email)) {
+        return new Response(JSON.stringify({ error: 'Invalid email format' }), {
+            status: 400,
+            headers: { 'content-type': 'application/json; charset=utf-8' }
+        });
+    }
+
+    if (!validateInput(company, 'company')) {
+        return new Response(JSON.stringify({ error: 'Invalid company format' }), {
+            status: 400,
+            headers: { 'content-type': 'application/json; charset=utf-8' }
+        });
+    }
+
+    if (!validateInput(category, 'category')) {
+        return new Response(JSON.stringify({ error: 'Invalid category format' }), {
+            status: 400,
+            headers: { 'content-type': 'application/json; charset=utf-8' }
+        });
+    }
+
+    if (!validateInput(message, 'message')) {
+        return new Response(JSON.stringify({ error: 'Invalid message format' }), {
             status: 400,
             headers: { 'content-type': 'application/json; charset=utf-8' }
         });

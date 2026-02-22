@@ -9,22 +9,128 @@ const TAG_OPTIONS = [
     { text: '企業VP', value: 'Corporate' }
 ];
 
+// Slack署名検証関数
+const verifySlackSignature = async (request, signingSecret, rawBody) => {
+    const signature = request.headers.get('x-slack-signature');
+    const timestamp = request.headers.get('x-slack-request-timestamp');
+    
+    if (!signature || !timestamp || !signingSecret) {
+        return false;
+    }
+    
+    // タイムスタンプ検証（リプレイ攻撃防止: 5分以内）
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (Math.abs(currentTime - parseInt(timestamp)) > 300) {
+        return false;
+    }
+    
+    // Slack署名の検証
+    try {
+        const baseString = `v0:${timestamp}:${rawBody}`;
+        const key = await crypto.subtle.importKey(
+            'raw',
+            new TextEncoder().encode(signingSecret),
+            { name: 'HMAC', hash: 'SHA-256' },
+            false,
+            ['sign']
+        );
+        
+        const hash = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(baseString));
+        const expectedSignature = `v0=${Array.from(new Uint8Array(hash))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('')}`;
+        
+        return signature === expectedSignature;
+    } catch (error) {
+        console.error('Signature verification error:', error);
+        return false;
+    }
+};
+
 export async function onRequestPost(context) {
     const { request, env } = context;
+    
+    // CSRF対策: OriginヘッダーチェックはSlackからの呼び出しの場合は除外
+    // ただし、Slack以外からの直接呼び出しは制限する
+    const origin = request.headers.get('Origin');
+    const userAgent = request.headers.get('User-Agent') || '';
+    const slackSignature = request.headers.get('x-slack-signature');
+    
+    // Slackからの呼び出しでない場合のみOriginチェック
+    if (!slackSignature && origin) {
+        const allowedOrigins = [
+            'https://undone.jp',
+            'https://www.undone.jp',
+            'https://undonejp.pages.dev'
+        ];
+        
+        try {
+            const originUrl = new URL(origin);
+            const originHost = `${originUrl.protocol}//${originUrl.host}`;
+            if (!allowedOrigins.includes(originHost)) {
+                return new Response(JSON.stringify({ error: 'CSRF: Invalid origin' }), {
+                    status: 403,
+                    headers: { 'content-type': 'application/json; charset=utf-8' }
+                });
+            }
+        } catch (error) {
+            return new Response(JSON.stringify({ error: 'CSRF: Invalid origin format' }), {
+                status: 403,
+                headers: { 'content-type': 'application/json; charset=utf-8' }
+            });
+        }
+    }
+    
+    // Slack署名検証（認証バイパス対策）
+    const signingSecret = env.SLACK_SIGNING_SECRET;
+    if (!signingSecret) {
+        return new Response(JSON.stringify({ error: 'Server configuration error: SLACK_SIGNING_SECRET not set' }), {
+            status: 500,
+            headers: { 'content-type': 'application/json; charset=utf-8' }
+        });
+    }
+    
+    // リクエストボディを一度読み取り（署名検証とパース両方で使用）
+    const rawBody = await request.text();
+    const isValidSignature = await verifySlackSignature(request, signingSecret, rawBody);
+    
+    if (!isValidSignature) {
+        return new Response(JSON.stringify({ error: 'Invalid Slack signature' }), {
+            status: 403,
+            headers: { 'content-type': 'application/json; charset=utf-8' }
+        });
+    }
+    
     const contentType = request.headers.get('content-type') || '';
 
-    // Parse request body
+    // Parse request body from rawBody
     let body;
-    if (contentType.includes('application/x-www-form-urlencoded')) {
-        const formData = await request.formData();
-        body = Object.fromEntries(formData.entries());
-    } else {
-        body = await request.json();
+    try {
+        if (contentType.includes('application/x-www-form-urlencoded')) {
+            const params = new URLSearchParams(rawBody);
+            body = Object.fromEntries(params.entries());
+        } else {
+            body = JSON.parse(rawBody);
+        }
+    } catch (error) {
+        return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+            status: 400,
+            headers: { 'content-type': 'application/json; charset=utf-8' }
+        });
     }
 
     // Check if this is an interaction (modal submission or button click)
     if (body.payload) {
-        const payload = JSON.parse(body.payload);
+        let payload;
+        try {
+            payload = JSON.parse(body.payload);
+        } catch (error) {
+            console.error('Invalid JSON in payload:', error.message);
+            return new Response(JSON.stringify({ error: 'Invalid payload format' }), {
+                status: 400,
+                headers: { 'content-type': 'application/json; charset=utf-8' }
+            });
+        }
 
         if (payload.type === 'view_submission') {
             return handleModalSubmission(payload, env);
@@ -342,7 +448,16 @@ async function handleBlockActions(payload, env) {
     const action = payload.actions?.[0];
 
     if (action?.action_id === 'delete_production') {
-        const { id, title } = JSON.parse(action.value);
+        let id, title;
+        try {
+            ({ id, title } = JSON.parse(action.value));
+        } catch (error) {
+            console.error('Invalid JSON in action value:', error.message);
+            return new Response(JSON.stringify({ error: 'Invalid action data' }), {
+                status: 400,
+                headers: { 'content-type': 'application/json; charset=utf-8' }
+            });
+        }
         const userId = payload.user?.id;
         const channelId = payload.channel?.id;
         const messageTs = payload.message?.ts;
@@ -511,7 +626,15 @@ async function fetchYouTubeDetails(videoId, apiKey) {
             key: apiKey
         });
         const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?${params}`);
-        if (!response.ok) return {};
+        if (!response.ok) {
+            // APIキー漏洩防止: 詳細エラーをログのみに記録
+            console.error('YouTube API error in slack-jisseki:', {
+                status: response.status,
+                statusText: response.statusText,
+                videoId: videoId.slice(0, 5) + '...' // 部分的なIDのみログ
+            });
+            return {};
+        }
 
         const data = await response.json();
         const item = data.items?.[0];
@@ -528,9 +651,57 @@ async function fetchYouTubeDetails(videoId, apiKey) {
 
 async function fetchTikTokDetails(url) {
     try {
+        // SSRF対策: TikTok URLのバリデーション
+        const isValidTikTokUrl = (url) => {
+            try {
+                const parsedUrl = new URL(url);
+                const allowedHosts = new Set([
+                    'www.tiktok.com',
+                    'tiktok.com',
+                    'm.tiktok.com',
+                    'vm.tiktok.com'
+                ]);
+                
+                // HTTPSのみ許可
+                if (parsedUrl.protocol !== 'https:') {
+                    return false;
+                }
+                
+                // ホスト名チェック
+                if (!allowedHosts.has(parsedUrl.hostname.toLowerCase())) {
+                    return false;
+                }
+                
+                // プライベートIPアドレス範囲への攻撃を防ぐ
+                const ipRegex = /^\d+\.\d+\.\d+\.\d+$/;
+                if (ipRegex.test(parsedUrl.hostname)) {
+                    return false;
+                }
+                
+                return true;
+            } catch {
+                return false;
+            }
+        };
+        
+        if (!isValidTikTokUrl(url)) {
+            console.warn('Invalid TikTok URL blocked:', url.slice(0, 50) + '...');
+            return {};
+        }
+        
         const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
-        const response = await fetch(oembedUrl);
-        if (!response.ok) return {};
+        const response = await fetch(oembedUrl, {
+            // タイムアウト設定（10秒）
+            signal: AbortSignal.timeout(10000),
+            headers: {
+                'User-Agent': 'undonejp-slack-proxy/1.0'
+            }
+        });
+        
+        if (!response.ok) {
+            console.error('TikTok oEmbed API error:', response.status);
+            return {};
+        }
 
         const data = await response.json();
         return {

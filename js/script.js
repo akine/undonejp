@@ -67,23 +67,15 @@ const syncPricingDetails = () => {
 const tiktokThumbCache = new Map();
 const dmmThumbCache = new Map();
 
-// microCMS設定
-const MICROCMS_CONFIG = {
-    serviceDomain: '7ektxje7is',
-    apiKey: 'CCak6hOuIEp4rE0deKXxSGaWAH54K0jMJH6J',
-    endpoint: 'productions'
-};
-
+// microCMS プロキシエンドポイント経由で安全にデータ取得
 const fetchFromMicroCMS = async (limit = 100) => {
-    const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?limit=${limit}`;
-    const response = await fetch(url, {
-        headers: {
-            'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey
-        }
-    });
+    const url = `/api/microcms?limit=${limit}`;
+    const response = await fetch(url);
+    
     if (!response.ok) {
-        throw new Error('Failed to fetch from microCMS');
+        throw new Error('Failed to fetch from microCMS proxy');
     }
+    
     const data = await response.json();
     return data.contents || [];
 };

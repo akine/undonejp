@@ -1,5 +1,32 @@
 export async function onRequestGet(context) {
     const { request } = context;
+    
+    // CSRF対策: Refererヘッダーチェック（GETリクエスト向け）
+    const referer = request.headers.get('Referer');
+    if (referer) {
+        const allowedOrigins = [
+            'https://undone.jp',
+            'https://www.undone.jp',
+            'https://undonejp.pages.dev'
+        ];
+        
+        try {
+            const refererUrl = new URL(referer);
+            const refererHost = `${refererUrl.protocol}//${refererUrl.host}`;
+            if (!allowedOrigins.includes(refererHost)) {
+                return new Response(JSON.stringify({ error: 'CSRF: Invalid referer' }), {
+                    status: 403,
+                    headers: { 'content-type': 'application/json; charset=utf-8' }
+                });
+            }
+        } catch (error) {
+            return new Response(JSON.stringify({ error: 'CSRF: Invalid referer format' }), {
+                status: 403,
+                headers: { 'content-type': 'application/json; charset=utf-8' }
+            });
+        }
+    }
+    
     const url = new URL(request.url);
     const list = url.searchParams.getAll('urls');
     const raw = url.searchParams.get('urls');
@@ -20,7 +47,35 @@ export async function onRequestGet(context) {
     const fetchHtml = async (pageUrl) => {
         try {
             const target = new URL(pageUrl);
-            if (!allowHosts.has(target.hostname)) {
+            
+            // より厳密なDMM URL検証（バイパス攻撃対策）
+            const isValidDmmUrl = (url) => {
+                // HTTPSのみ許可
+                if (url.protocol !== 'https:') {
+                    return false;
+                }
+                
+                // ホスト名の厳密チェック
+                const allowedHosts = ['tv.dmm.com', 'www.tv.dmm.com'];
+                if (!allowedHosts.includes(url.hostname)) {
+                    return false;
+                }
+                
+                // ユーザー名、パスワード、ポート番号の存在チェック（攻撃ベクター）
+                if (url.username || url.password || url.port) {
+                    return false;
+                }
+                
+                // ホスト名に不正な文字が含まれていないかチェック
+                if (!/^[a-zA-Z0-9.-]+$/.test(url.hostname)) {
+                    return false;
+                }
+                
+                return true;
+            };
+            
+            if (!isValidDmmUrl(target)) {
+                console.warn('Invalid DMM URL blocked:', pageUrl.slice(0, 50) + '...');
                 return null;
             }
             const response = await fetch(target.toString(), {
